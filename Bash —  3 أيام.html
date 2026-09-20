@@ -1,0 +1,4189 @@
+<!DOCTYPE html>
+<!-- saved from url=(0038)file:///C:/Users/msi/Desktop/bash.html -->
+<html lang="ar" dir="rtl"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#070b12">
+    <meta name="description" content="موسوعة الشرح التفاعلي والمتابعة لتعلم Bash Scripting في 3 أيام">
+    <title>أكاديمية Bash — تحدي 3 أيام</title>
+
+    <style>
+        :root {
+            --bg: #05080d;
+            --bg2: #080d14;
+            --panel: #0b111a;
+            --panel2: #0f1722;
+            --panel3: #111c29;
+            --border: #1b2a3b;
+            --text: #e7eef7;
+            --muted: #8291a5;
+            --cyan: #00d9ff;
+            --cyan2: #00a8cc;
+            --green: #22e58b;
+            --green2: #159d61;
+            --yellow: #ffc857;
+            --red: #ff5c72;
+            --purple: #9b7bff;
+            --shadow: 0 18px 50px rgba(0, 0, 0, .35);
+            --radius: 16px;
+            --radius-sm: 10px;
+            --sidebar: 285px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background:
+                radial-gradient(circle at 15% 0%, rgba(0, 217, 255, .055), transparent 28%),
+                radial-gradient(circle at 90% 20%, rgba(34, 229, 139, .035), transparent 25%),
+                var(--bg);
+            color: var(--text);
+            font-family:
+                "Segoe UI",
+                Tahoma,
+                Arial,
+                sans-serif;
+            min-height: 100vh;
+            line-height: 1.75;
+        }
+
+        button,
+        input,
+        textarea,
+        select {
+            font: inherit;
+        }
+
+        button {
+            cursor: pointer;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        /* =========================
+   APP LAYOUT
+========================= */
+
+        .app {
+            min-height: 100vh;
+            display: flex;
+        }
+
+        .sidebar {
+            width: var(--sidebar);
+            position: fixed;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 100;
+            background: rgba(7, 12, 19, .96);
+            border-left: 1px solid var(--border);
+            backdrop-filter: blur(20px);
+            overflow-y: auto;
+            padding: 22px 16px;
+        }
+
+        .main {
+            width: calc(100% - var(--sidebar));
+            margin-right: var(--sidebar);
+            min-height: 100vh;
+        }
+
+        /* =========================
+   BRAND
+========================= */
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 4px 8px 24px;
+        }
+
+        .brand-icon {
+            width: 46px;
+            height: 46px;
+            border-radius: 13px;
+            display: grid;
+            place-items: center;
+            background: rgba(0, 217, 255, .08);
+            border: 1px solid rgba(0, 217, 255, .3);
+            color: var(--cyan);
+            font-size: 23px;
+            box-shadow: 0 0 30px rgba(0, 217, 255, .08);
+        }
+
+        .brand-title {
+            font-size: 17px;
+            font-weight: 800;
+        }
+
+        .brand-subtitle {
+            color: var(--muted);
+            font-size: 11px;
+        }
+
+        /* =========================
+   SIDEBAR
+========================= */
+
+        .sidebar-section {
+            margin-bottom: 24px;
+        }
+
+        .sidebar-label {
+            color: #536275;
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: .8px;
+            margin: 0 9px 9px;
+        }
+
+        .nav-item {
+            width: 100%;
+            border: 1px solid transparent;
+            background: transparent;
+            color: #aebbc9;
+            padding: 10px 11px;
+            border-radius: 11px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-align: right;
+            margin-bottom: 4px;
+            transition: .2s;
+        }
+
+        .nav-item:hover {
+            background: #0d1722;
+            color: #fff;
+        }
+
+        .nav-item.active {
+            background: rgba(0, 217, 255, .08);
+            border-color: rgba(0, 217, 255, .18);
+            color: var(--cyan);
+        }
+
+        .nav-icon {
+            width: 26px;
+            text-align: center;
+        }
+
+        .day-nav {
+            border: 1px solid var(--border);
+            background: #0a1119;
+            border-radius: 12px;
+            padding: 10px;
+            margin-bottom: 8px;
+            transition: .2s;
+        }
+
+        .day-nav:hover {
+            border-color: #2a4058;
+        }
+
+        .day-nav-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .day-nav-title {
+            font-weight: 700;
+            font-size: 13px;
+        }
+
+        .day-nav-time {
+            color: var(--muted);
+            font-size: 10px;
+            margin-top: 3px;
+        }
+
+        .day-progress {
+            height: 4px;
+            background: #16212d;
+            border-radius: 99px;
+            margin-top: 9px;
+            overflow: hidden;
+        }
+
+        .day-progress-fill {
+            height: 100%;
+            width: 0;
+            background: var(--green);
+            border-radius: 99px;
+            transition: .4s;
+        }
+
+        /* =========================
+   TOPBAR
+========================= */
+
+        .topbar {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            height: 72px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            padding: 0 30px;
+            background: rgba(5, 8, 13, .82);
+            backdrop-filter: blur(18px);
+            border-bottom: 1px solid rgba(27, 42, 59, .75);
+        }
+
+        .topbar-right,
+        .topbar-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .mobile-menu {
+            display: none;
+        }
+
+        .search {
+            width: min(400px, 40vw);
+            position: relative;
+        }
+
+        .search input {
+            width: 100%;
+            background: #0b121b;
+            border: 1px solid var(--border);
+            color: #fff;
+            outline: none;
+            border-radius: 11px;
+            padding: 9px 38px 9px 12px;
+        }
+
+        .search-icon {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--muted);
+        }
+
+        .icon-button {
+            width: 40px;
+            height: 40px;
+            display: grid;
+            place-items: center;
+            border: 1px solid var(--border);
+            background: #0b121b;
+            color: #b7c4d2;
+            border-radius: 11px;
+            transition: .2s;
+        }
+
+        .icon-button:hover {
+            border-color: #34506c;
+            color: var(--cyan);
+        }
+
+        /* =========================
+   CONTENT
+========================= */
+
+        .content {
+            padding: 34px;
+            max-width: 1500px;
+            margin: auto;
+        }
+
+        .hero {
+            border: 1px solid var(--border);
+            background:
+                linear-gradient(135deg, rgba(0, 217, 255, .07), transparent 40%),
+                linear-gradient(315deg, rgba(34, 229, 139, .035), transparent 45%),
+                var(--panel);
+            border-radius: 22px;
+            padding: 32px;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 25px;
+        }
+
+        .hero:after {
+            content: "";
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            left: -130px;
+            top: -170px;
+            border-radius: 50%;
+            border: 1px solid rgba(0, 217, 255, .08);
+            box-shadow:
+                0 0 0 40px rgba(0, 217, 255, .015),
+                0 0 0 80px rgba(0, 217, 255, .01);
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 5px 10px;
+            border-radius: 99px;
+            background: rgba(0, 217, 255, .08);
+            border: 1px solid rgba(0, 217, 255, .18);
+            color: var(--cyan);
+            font-size: 11px;
+            font-weight: 800;
+            margin-bottom: 13px;
+        }
+
+        .hero h1 {
+            font-size: clamp(26px, 4vw, 44px);
+            line-height: 1.2;
+            margin-bottom: 12px;
+            letter-spacing: -1px;
+        }
+
+        .hero h1 span {
+            color: var(--cyan);
+        }
+
+        .hero p {
+            max-width: 850px;
+            color: #9cabbc;
+            font-size: 14px;
+        }
+
+        .hero-grid {
+            margin-top: 25px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+
+        .hero-stat {
+            background: rgba(5, 8, 13, .45);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 13px;
+        }
+
+        .hero-stat-number {
+            font-size: 22px;
+            font-weight: 900;
+            color: #fff;
+        }
+
+        .hero-stat-label {
+            color: var(--muted);
+            font-size: 11px;
+        }
+
+        /* =========================
+   GLOBAL PROGRESS
+========================= */
+
+        .progress-card {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 18px 20px;
+            margin-bottom: 25px;
+        }
+
+        .progress-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 11px;
+        }
+
+        .progress-title {
+            font-weight: 800;
+        }
+
+        .progress-percent {
+            font-weight: 900;
+            color: var(--green);
+            font-family: monospace;
+        }
+
+        .progress-track {
+            width: 100%;
+            height: 9px;
+            background: #17212d;
+            border-radius: 99px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            width: 0;
+            height: 100%;
+            background: linear-gradient(90deg, var(--cyan), var(--green));
+            border-radius: 99px;
+            transition: width .45s ease;
+            box-shadow: 0 0 16px rgba(34, 229, 139, .2);
+        }
+
+        .progress-meta {
+            display: flex;
+            justify-content: space-between;
+            color: var(--muted);
+            font-size: 11px;
+            margin-top: 8px;
+        }
+
+        /* =========================
+   TOOLBAR
+========================= */
+
+        .toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 22px;
+        }
+
+        .filter-group {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            border: 1px solid var(--border);
+            background: #0a1119;
+            color: #9aa9ba;
+            border-radius: 9px;
+            padding: 7px 11px;
+            font-size: 11px;
+        }
+
+        .filter-btn.active,
+        .filter-btn:hover {
+            border-color: rgba(0, 217, 255, .3);
+            color: var(--cyan);
+            background: rgba(0, 217, 255, .06);
+        }
+
+        .reset-btn {
+            border: 1px solid rgba(255, 92, 114, .2);
+            background: rgba(255, 92, 114, .05);
+            color: #ff8293;
+            border-radius: 9px;
+            padding: 7px 11px;
+            font-size: 11px;
+        }
+
+        /* =========================
+   DAY
+========================= */
+
+        .day {
+            margin-bottom: 42px;
+            scroll-margin-top: 90px;
+        }
+
+        .day-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 15px;
+            margin-bottom: 16px;
+        }
+
+        .day-kicker {
+            color: var(--cyan);
+            font-size: 11px;
+            font-weight: 900;
+            letter-spacing: 1px;
+        }
+
+        .day h2 {
+            font-size: 25px;
+            margin-top: 2px;
+        }
+
+        .day-desc {
+            color: var(--muted);
+            font-size: 12px;
+            margin-top: 4px;
+        }
+
+        .day-tag {
+            white-space: nowrap;
+            padding: 6px 10px;
+            border-radius: 8px;
+            background: #0d1722;
+            border: 1px solid var(--border);
+            color: #93a4b7;
+            font-size: 10px;
+        }
+
+        /* =========================
+   LESSON
+========================= */
+
+        .lesson {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 15px;
+            margin-bottom: 11px;
+            overflow: hidden;
+            transition: .25s;
+        }
+
+        .lesson:hover {
+            border-color: #253b52;
+        }
+
+        .lesson.completed {
+            border-color: rgba(34, 229, 139, .18);
+        }
+
+        .lesson-head {
+            padding: 15px 17px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+        }
+
+        .lesson-number {
+            width: 31px;
+            height: 31px;
+            flex: none;
+            display: grid;
+            place-items: center;
+            border-radius: 9px;
+            background: #101b27;
+            color: #7d8da0;
+            font-family: monospace;
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        .lesson.completed .lesson-number {
+            background: rgba(34, 229, 139, .1);
+            color: var(--green);
+        }
+
+        .lesson-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .lesson-title {
+            font-weight: 800;
+            font-size: 14px;
+        }
+
+        .lesson-meta {
+            color: var(--muted);
+            font-size: 10px;
+            margin-top: 2px;
+        }
+
+        .lesson-check {
+            position: relative;
+            width: 22px;
+            height: 22px;
+            flex: none;
+        }
+
+        .lesson-check input {
+            position: absolute;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+
+        .custom-check {
+            width: 22px;
+            height: 22px;
+            border: 1px solid #324457;
+            border-radius: 7px;
+            display: grid;
+            place-items: center;
+            color: transparent;
+            transition: .2s;
+        }
+
+        .lesson-check input:checked+.custom-check {
+            background: var(--green);
+            border-color: var(--green);
+            color: #04100a;
+        }
+
+        .lesson-arrow {
+            color: #536477;
+            font-size: 12px;
+            transition: .25s;
+        }
+
+        .lesson.open .lesson-arrow {
+            transform: rotate(180deg);
+        }
+
+        .lesson-body {
+            display: none;
+            border-top: 1px solid var(--border);
+            padding: 20px;
+            background: rgba(0, 0, 0, .08);
+        }
+
+        .lesson.open .lesson-body {
+            display: block;
+            animation: fadeIn .2s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-3px)
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0)
+            }
+        }
+
+        .explain-box {
+            border-right: 3px solid var(--cyan);
+            background: rgba(0, 217, 255, .035);
+            border-radius: 9px;
+            padding: 12px 14px;
+            margin-bottom: 15px;
+        }
+
+        .explain-box strong {
+            color: var(--cyan);
+            font-size: 12px;
+        }
+
+        .explain-box p {
+            color: #c0cad5;
+            font-size: 12px;
+            margin-top: 3px;
+        }
+
+        .example-label {
+            font-size: 11px;
+            font-weight: 800;
+            color: #8f9eae;
+            margin-bottom: 6px;
+        }
+
+        /* =========================
+   CODE BLOCK
+========================= */
+
+        .code-wrap {
+            position: relative;
+            margin-bottom: 15px;
+        }
+
+        .code {
+            direction: ltr;
+            text-align: left;
+            white-space: pre-wrap;
+            word-break: break-word;
+            background: #030507;
+            border: 1px solid #172331;
+            border-radius: 11px;
+            padding: 17px;
+            padding-top: 42px;
+            color: #d7e8f6;
+            font-family:
+                "Cascadia Code",
+                "Fira Code",
+                Consolas,
+                monospace;
+            font-size: 12px;
+            line-height: 1.8;
+            min-height: 70px;
+            overflow: auto;
+            cursor: pointer;
+            transition: .2s;
+        }
+
+        .code:hover {
+            border-color: rgba(0, 217, 255, .4);
+            box-shadow: inset 0 0 25px rgba(0, 217, 255, .025);
+        }
+
+        .code-header {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 33px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 10px;
+            pointer-events: none;
+        }
+
+        .code-dots {
+            display: flex;
+            gap: 5px;
+        }
+
+        .code-dots i {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #334354;
+        }
+
+        .code-hint {
+            color: #4f6174;
+            font-size: 9px;
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 6px;
+            left: 9px;
+            border: 1px solid #1b2a3b;
+            background: #0b121a;
+            color: #75879a;
+            border-radius: 6px;
+            padding: 3px 7px;
+            font-size: 9px;
+            z-index: 2;
+        }
+
+        .copy-btn:hover {
+            color: var(--cyan);
+            border-color: rgba(0, 217, 255, .3);
+        }
+
+        .output {
+            background: #020406;
+            border: 1px solid #14202d;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 8px;
+        }
+
+        .output-head {
+            background: #090e14;
+            border-bottom: 1px solid #14202d;
+            color: #5f7287;
+            padding: 7px 11px;
+            font-size: 9px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .output-body {
+            padding: 12px;
+            min-height: 38px;
+            direction: ltr;
+            text-align: left;
+            color: #cce8d8;
+            font: 11px/1.7 Consolas, monospace;
+            white-space: pre-wrap;
+        }
+
+        .run-btn {
+            border: 1px solid rgba(0, 217, 255, .2);
+            background: rgba(0, 217, 255, .06);
+            color: var(--cyan);
+            padding: 7px 12px;
+            border-radius: 8px;
+            font-size: 10px;
+        }
+
+        .run-btn:hover {
+            background: rgba(0, 217, 255, .12);
+        }
+
+        .tip {
+            border: 1px solid rgba(255, 200, 87, .12);
+            background: rgba(255, 200, 87, .035);
+            color: #bda66e;
+            border-radius: 9px;
+            padding: 10px 12px;
+            font-size: 11px;
+        }
+
+        .tip strong {
+            color: var(--yellow);
+        }
+
+        /* =========================
+   NOTES
+========================= */
+
+        .notes-card {
+            margin-top: 18px;
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 15px;
+            padding: 17px;
+        }
+
+        .notes-title {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 9px;
+        }
+
+        .notes-title strong {
+            font-size: 13px;
+        }
+
+        .saved-indicator {
+            color: var(--green);
+            font-size: 10px;
+            opacity: .8;
+        }
+
+        .notes-card textarea {
+            width: 100%;
+            min-height: 130px;
+            resize: vertical;
+            background: #070c12;
+            border: 1px solid #182636;
+            border-radius: 10px;
+            color: #cdd8e3;
+            outline: none;
+            padding: 12px;
+            direction: rtl;
+            font-size: 12px;
+        }
+
+        .notes-card textarea:focus {
+            border-color: rgba(0, 217, 255, .35);
+        }
+
+        /* =========================
+   SIDE WIDGETS
+========================= */
+
+        .widgets-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-top: 25px;
+            margin-bottom: 35px;
+        }
+
+        .widget {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 15px;
+            padding: 18px;
+        }
+
+        .widget-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 800;
+            font-size: 13px;
+            margin-bottom: 13px;
+        }
+
+        .widget-title span {
+            color: var(--cyan);
+        }
+
+        .timer {
+            text-align: center;
+            padding: 8px;
+        }
+
+        .timer-mode {
+            color: var(--muted);
+            font-size: 10px;
+            margin-bottom: 4px;
+        }
+
+        .timer-display {
+            font-family: monospace;
+            font-size: 45px;
+            font-weight: 900;
+            letter-spacing: 2px;
+            color: #eef7ff;
+        }
+
+        .timer-display.running {
+            color: var(--green);
+            text-shadow: 0 0 20px rgba(34, 229, 139, .15);
+        }
+
+        .timer-controls {
+            display: flex;
+            justify-content: center;
+            gap: 7px;
+            margin-top: 8px;
+        }
+
+        .timer-btn {
+            border: 1px solid var(--border);
+            background: #0c141d;
+            color: #a9b7c6;
+            border-radius: 8px;
+            padding: 7px 12px;
+            font-size: 10px;
+        }
+
+        .timer-btn.primary {
+            color: var(--cyan);
+            border-color: rgba(0, 217, 255, .25);
+        }
+
+        .timer-btn:hover {
+            border-color: #3b536a;
+        }
+
+        /* =========================
+   TERMINAL
+========================= */
+
+        .terminal-widget {
+            position: sticky;
+            bottom: 14px;
+        }
+
+        .terminal {
+            background: #020405;
+            border: 1px solid #182735;
+            border-radius: 11px;
+            overflow: hidden;
+        }
+
+        .terminal-bar {
+            background: #0b1118;
+            padding: 8px 10px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            border-bottom: 1px solid #14202c;
+        }
+
+        .terminal-bar i {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #344454;
+        }
+
+        .terminal-title {
+            color: #586a7d;
+            font: 9px monospace;
+            margin-right: 5px;
+        }
+
+        .terminal-screen {
+            height: 180px;
+            overflow: auto;
+            padding: 12px;
+            direction: ltr;
+            text-align: left;
+            font: 11px/1.7 Consolas, monospace;
+            color: #bcd3e5;
+            white-space: pre-wrap;
+        }
+
+        .terminal-screen .prompt {
+            color: var(--green);
+        }
+
+        .terminal-screen .cyan {
+            color: var(--cyan);
+        }
+
+        .terminal-screen .muted {
+            color: #526477;
+        }
+
+        .terminal-input-row {
+            display: flex;
+            direction: ltr;
+            border-top: 1px solid #14202c;
+        }
+
+        .terminal-input-row span {
+            color: var(--green);
+            padding: 8px 0 8px 10px;
+            font: 11px monospace;
+        }
+
+        .terminal-input {
+            flex: 1;
+            border: 0;
+            outline: 0;
+            background: transparent;
+            color: #d6e6f4;
+            padding: 8px;
+            font: 11px monospace;
+        }
+
+        /* =========================
+   CHEAT SHEET
+========================= */
+
+        .cheat-section {
+            scroll-margin-top: 90px;
+            margin-top: 35px;
+        }
+
+        .section-title {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+
+        .section-subtitle {
+            color: var(--muted);
+            font-size: 12px;
+            margin-bottom: 15px;
+        }
+
+        .table-wrap {
+            overflow-x: auto;
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 15px;
+        }
+
+        .cheat-table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 700px;
+        }
+
+        .cheat-table th {
+            text-align: right;
+            color: #788a9d;
+            background: #0c141d;
+            font-size: 10px;
+            padding: 11px 13px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .cheat-table td {
+            padding: 10px 13px;
+            border-bottom: 1px solid #131f2c;
+            color: #b8c5d2;
+            font-size: 11px;
+        }
+
+        .cheat-table tr:last-child td {
+            border-bottom: 0;
+        }
+
+        .cheat-table code {
+            direction: ltr;
+            display: inline-block;
+            background: #030609;
+            border: 1px solid #172534;
+            color: var(--cyan);
+            padding: 2px 6px;
+            border-radius: 5px;
+            font: 10px monospace;
+        }
+
+        /* =========================
+   SEARCH
+========================= */
+
+        .search-hidden {
+            display: none !important;
+        }
+
+        .no-results {
+            display: none;
+            text-align: center;
+            color: var(--muted);
+            padding: 30px;
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 15px;
+        }
+
+        .no-results.show {
+            display: block;
+        }
+
+        /* =========================
+   TOAST
+========================= */
+
+        .toast {
+            position: fixed;
+            left: 25px;
+            bottom: 25px;
+            z-index: 1000;
+            background: #0d1721;
+            border: 1px solid #294058;
+            color: #dbe7f2;
+            border-radius: 10px;
+            padding: 10px 14px;
+            font-size: 11px;
+            box-shadow: var(--shadow);
+            transform: translateY(100px);
+            opacity: 0;
+            pointer-events: none;
+            transition: .3s;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .toast.success {
+            border-color: rgba(34, 229, 139, .3);
+        }
+
+        /* =========================
+   FOOTER
+========================= */
+
+        footer {
+            text-align: center;
+            color: #4c5d70;
+            font-size: 10px;
+            padding: 35px 10px 25px;
+        }
+
+        kbd {
+            background: #111b25;
+            border: 1px solid #273849;
+            border-radius: 4px;
+            padding: 1px 5px;
+            font: 9px monospace;
+            color: #91a2b4;
+        }
+
+        /* =========================
+   RESPONSIVE
+========================= */
+
+        @media(max-width:1000px) {
+            :root {
+                --sidebar: 250px;
+            }
+
+            .content {
+                padding: 25px;
+            }
+
+            .hero-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .widgets-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media(max-width:760px) {
+            .sidebar {
+                transform: translateX(100%);
+                transition: .3s;
+                width: 280px;
+                box-shadow: -20px 0 60px rgba(0, 0, 0, .5);
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            .main {
+                width: 100%;
+                margin-right: 0;
+            }
+
+            .mobile-menu {
+                display: grid;
+            }
+
+            .topbar {
+                padding: 0 15px;
+            }
+
+            .search {
+                width: 160px;
+            }
+
+            .content {
+                padding: 18px 13px;
+            }
+
+            .hero {
+                padding: 22px 18px;
+                border-radius: 17px;
+            }
+
+            .hero h1 {
+                font-size: 28px;
+            }
+
+            .day-header {
+                flex-direction: column;
+            }
+
+            .day h2 {
+                font-size: 21px;
+            }
+
+            .lesson-body {
+                padding: 14px;
+            }
+
+            .lesson-title {
+                font-size: 13px;
+            }
+
+            .code {
+                font-size: 11px;
+                padding: 42px 12px 12px;
+            }
+
+            .topbar-left .icon-button:not(.mobile-menu) {
+                display: none;
+            }
+        }
+
+        @media(max-width:450px) {
+            .search {
+                width: 125px;
+            }
+
+            .topbar {
+                gap: 5px;
+            }
+
+            .hero-grid {
+                display: none;
+            }
+
+            .timer-display {
+                font-size: 37px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="app">
+
+        <!-- ========================= SIDEBAR ========================= -->
+
+        <aside class="sidebar open" id="sidebar">
+
+            <div class="brand">
+                <div class="brand-icon">⌘</div>
+                <div>
+                    <div class="brand-title">click tech</div>
+                    <div class="brand-subtitle">Interactive Learning OS</div>
+                </div>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-label">التنقل</div>
+
+                <button class="nav-item active" data-target="home">
+                    <span class="nav-icon">⌂</span>
+                    <span>الرئيسية</span>
+                </button>
+
+                <button class="nav-item" data-target="day1">
+                    <span class="nav-icon">01</span>
+                    <span>اليوم الأول</span>
+                </button>
+
+                <button class="nav-item" data-target="day2">
+                    <span class="nav-icon">02</span>
+                    <span>اليوم الثاني</span>
+                </button>
+
+                <button class="nav-item" data-target="day3">
+                    <span class="nav-icon">03</span>
+                    <span>اليوم الثالث</span>
+                </button>
+
+                <button class="nav-item" data-target="cheat">
+                    <span class="nav-icon">⌘</span>
+                    <span>قاموس الأوامر</span>
+                </button>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-label">تقدم الأيام</div>
+
+                <div class="day-nav" data-target="day1">
+                    <div class="day-nav-top">
+                        <div>
+                            <div class="day-nav-title">اليوم الأول</div>
+                            <div class="day-nav-time">00:00 — 32:00</div>
+                        </div>
+                        <span class="day-nav-percent" id="sidePercent1">0%</span>
+                    </div>
+                    <div class="day-progress">
+                        <div class="day-progress-fill" id="sideProgress1" style="width: 0%;"></div>
+                    </div>
+                </div>
+
+                <div class="day-nav" data-target="day2">
+                    <div class="day-nav-top">
+                        <div>
+                            <div class="day-nav-title">اليوم الثاني</div>
+                            <div class="day-nav-time">01:08:10 — 01:34:20</div>
+                        </div>
+                        <span class="day-nav-percent" id="sidePercent2">0%</span>
+                    </div>
+                    <div class="day-progress">
+                        <div class="day-progress-fill" id="sideProgress2" style="width: 0%;"></div>
+                    </div>
+                </div>
+
+                <div class="day-nav" data-target="day3">
+                    <div class="day-nav-top">
+                        <div>
+                            <div class="day-nav-title">اليوم الثالث</div>
+                            <div class="day-nav-time">32:05 — 01:08:10 + الأخير</div>
+                        </div>
+                        <span class="day-nav-percent" id="sidePercent3">0%</span>
+                    </div>
+                    <div class="day-progress">
+                        <div class="day-progress-fill" id="sideProgress3" style="width: 0%;"></div>
+                    </div>
+                </div>
+            </div>
+
+        </aside>
+
+        <!-- ========================= MAIN ========================= -->
+
+        <main class="main">
+
+            <header class="topbar">
+
+                <div class="topbar-right">
+
+                    <button class="icon-button mobile-menu" id="mobileMenu" title="القائمة">
+                        ☰
+                    </button>
+
+                    <div class="search">
+                        <span class="search-icon">⌕</span>
+                        <input type="search" id="searchInput" placeholder="ابحث عن درس أو أمر..." autocomplete="off">
+                    </div>
+
+                </div>
+
+                <div class="topbar-left">
+
+                    <button class="icon-button" id="expandAll" title="فتح جميع الدروس">
+                        ⊞
+                    </button>
+
+                    <button class="icon-button" id="collapseAll" title="إغلاق جميع الدروس">
+                        ⊟
+                    </button>
+
+                </div>
+
+            </header>
+
+            <div class="content">
+
+                <!-- ========================= HERO ========================= -->
+
+                <section class="hero" id="home">
+
+                    <div class="badge">
+                        <span>●</span>
+                        تحدي 3 أيام
+                    </div>
+
+                    <h1>
+                        تعلّم <span>Bash Scripting</span>
+                        من الصفر
+                    </h1>
+
+                    <p>
+                        موسوعة تفاعلية تساعدك على فهم Shell وBash وكتابة السكربتات
+                        والأتمتة خطوة بخطوة، مع أمثلة عملية ومحاكي Terminal
+                        لمساعدتك على تثبيت المعلومة قبل تطبيقها في WSL.
+                    </p>
+
+                    <div class="hero-grid">
+
+                        <div class="hero-stat">
+                            <div class="hero-stat-number">21</div>
+                            <div class="hero-stat-label">درس تفاعلي</div>
+                        </div>
+
+                        <div class="hero-stat">
+                            <div class="hero-stat-number">3</div>
+                            <div class="hero-stat-label">أيام تدريب</div>
+                        </div>
+
+                        <div class="hero-stat">
+                            <div class="hero-stat-number">100%</div>
+                            <div class="hero-stat-label">محلي — بدون Backend</div>
+                        </div>
+
+                    </div>
+
+                </section>
+
+                <!-- ========================= PROGRESS ========================= -->
+
+                <section class="progress-card">
+
+                    <div class="progress-top">
+                        <div class="progress-title">
+                            🚀 تقدمك الإجمالي
+                        </div>
+
+                        <div class="progress-percent" id="globalPercent">0%</div>
+                    </div>
+
+                    <div class="progress-track">
+                        <div class="progress-fill" id="globalProgress" style="width: 0%;"></div>
+                    </div>
+
+                    <div class="progress-meta">
+                        <span id="completedCount">0 من 21 درس مكتمل</span>
+                        <span id="remainingCount">21 درس متبقي</span>
+                    </div>
+
+                </section>
+
+                <!-- ========================= TOOLBAR ========================= -->
+
+                <div class="toolbar">
+
+                    <div class="filter-group">
+
+                        <button class="filter-btn active" data-filter="all">
+                            كل الدروس
+                        </button>
+
+                        <button class="filter-btn" data-filter="completed">
+                            المكتملة
+                        </button>
+
+                        <button class="filter-btn" data-filter="pending">
+                            المتبقية
+                        </button>
+
+                    </div>
+
+                    <button class="reset-btn" id="resetProgress">
+                        ↻ إعادة ضبط التقدم
+                    </button>
+
+                </div><div id="noResults" class="no-results">🔎 لا توجد دروس تطابق البحث أو الفلتر الحالي.</div>
+
+                <!-- ========================= DAY 1 ========================= -->
+
+                <section class="day" id="day1">
+
+                    <div class="day-header">
+
+                        <div>
+                            <div class="day-kicker">DAY 01 / FOUNDATIONS</div>
+                            <h2>أساسيات Bash والمدخلات</h2>
+                            <div class="day-desc">
+                                من الدقيقة 00:00 إلى 32:00 — ابني الأساس من الصفر.
+                            </div>
+                        </div>
+
+                        <div class="day-tag">
+                            7 دروس
+                        </div>
+
+                    </div>
+
+                    <!-- LESSON 1 -->
+
+                    <article class="lesson" data-id="d1-1" data-day="1" data-search="shell bash terminal shell الفرق بين التيرمنال والشيل">
+
+                        <div class="lesson-head">
+
+                            <div class="lesson-number">01</div>
+
+                            <div class="lesson-info">
+                                <div class="lesson-title">
+                                    Shell و Bash و Terminal
+                                </div>
+                                <div class="lesson-meta">
+                                    الأساس الذي لازم تفهمه قبل كتابة أي Script
+                                </div>
+                            </div>
+
+                            <label class="lesson-check" title="تعليم كمكتمل">
+                                <input type="checkbox">
+                                <span class="custom-check">✓</span>
+                            </label>
+
+                            <span class="lesson-arrow">⌄</span>
+
+                        </div>
+
+                        <div class="lesson-body">
+
+                            <div class="explain-box">
+                                <strong>بالمختصر المفيد</strong>
+                                <p>
+                                    الـ <b>Terminal</b> هو المكان أو البرنامج الذي تكتب فيه الأوامر،
+                                    بينما الـ <b>Shell</b> هو البرنامج الذي يفهم هذه الأوامر وينفذها.
+                                    <b>Bash</b> هو واحد من أشهر أنواع الـ Shell.
+                                </p>
+                            </div>
+
+                            <div class="example-label">مثال عملي</div>
+
+                            <div class="code-wrap">
+                                <button class="copy-btn">نسخ</button>
+                                <div class="code-header">
+                                    <div class="code-dots">
+                                        <i></i><i></i><i></i>
+                                    </div>
+                                    <span class="code-hint">اضغط على الكود للتجربة</span>
+                                </div>
+                                <pre class="code" data-output="$ echo $SHELL
+/bin/bash" title="اضغط هنا لإظهار النتيجة في المحاكي">$ echo $SHELL
+/bin/bash</pre>
+                            </div>
+
+                            <div class="tip">
+                                <strong>💡 تذكر:</strong>
+                                Terminal = المكان، Shell = المفسر، Bash = نوع من أنواع الـ Shell.
+                            </div>
+
+                        </div>
+                    </article>
+
+                    <!-- LESSON 2 -->
+
+                    <article class="lesson" data-id="d1-2" data-day="1" data-search="sh script shebang bash ملف سكربت">
+
+                        <div class="lesson-head">
+
+                            <div class="lesson-number">02</div>
+
+                            <div class="lesson-info">
+                                <div class="lesson-title">
+                                    إنشاء أول Script وShebang
+                                </div>
+                                <div class="lesson-meta">
+                                    إنشاء ملف .sh وتحديد المفسر
+                                </div>
+                            </div>
+
+                            <label class="lesson-check">
+                                <input type="checkbox">
+                                <span class="custom-check">✓</span>
+                            </label>
+
+                            <span class="lesson-arrow">⌄</span>
+
+                        </div>
+
+                        <div class="lesson-body">
+
+                            <div class="explain-box">
+                                <strong>بالمختصر المفيد</strong>
+                                <p>
+                                    ملف الـ Bash Script هو مجرد ملف نصي يحتوي على مجموعة أوامر.
+                                    امتداد <b>.sh</b> شائع، والـ Shebang يخبر النظام أن الملف
+                                    يجب تشغيله باستخدام Bash.
+                                </p>
+                            </div>
+
+                            <div class="example-label">إنشاء الملف</div>
+
+                            <div class="code-wrap">
+                                <button class="copy-btn">نسخ</button>
+                                <div class="code-header">
+                                    <div class="code-dots"><i></i><i></i><i></i></div>
+                                    <span class="code-hint">اضغط للتجربة</span>
+                                </div>
+                                <pre class="code" data-output="Hello from Bash!" title="اضغط هنا لإظهار النتيجة في المحاكي">#!/bin/bash
+
+echo "Hello from Bash!"</pre>
+                            </div>
+
+                            <div class="tip">
+                                <strong>💡 قاعدة:</strong>
+                                أول سطر في السكربت غالبًا يكون:
+                                <code>#!/bin/bash</code>
+                            </div>
+
+                        </div>
+                    </article>
+
+                    <!-- LESSON 3 -->
+
+                    <article class="lesson" data-id="d1-3" data-day="1" data-search="chmod permission executable صلاحيات تشغيل script">
+
+                        <div class="lesson-head">
+
+                            <div class="lesson-number">03</div>
+
+                            <div class="lesson-info">
+                                <div class="lesson-title">
+                                    الصلاحيات وتشغيل الـ Script
+                                </div>
+                                <div class="lesson-meta">
+                                    chmod +x وتشغيل الملف مباشرة
+                                </div>
+                            </div>
+
+                            <label class="lesson-check">
+                                <input type="checkbox">
+                                <span class="custom-check">✓</span>
+                            </label>
+
+                            <span class="lesson-arrow">⌄</span>
+
+                        </div>
+
+                        <div class="lesson-body">
+
+                            <div class="explain-box">
+                                <strong>بالمختصر المفيد</strong>
+                                <p>
+                                    Linux لا يعتبر كل ملف قابلًا للتنفيذ تلقائيًا.
+                                    باستخدام <b>chmod +x</b> نعطي الملف صلاحية التنفيذ.
+                                </p>
+                            </div>
+
+                            <div class="example-label">أوامر التشغيل</div>
+
+                            <div class="code-wrap">
+                                <button class="copy-btn">نسخ</button>
+                                <div class="code-header">
+                                    <div class="code-dots"><i></i><i></i><i></i></div>
+                                    <span class="code-hint">اضغط للتجربة</span>
+                                </div>
+                                <pre class="code" data-output="$ chmod +x hello.sh
+$ ./hello.sh
+Hello from Bash!" title="اضغط هنا لإظهار النتيجة في المحاكي">chmod +x hello.sh
+
+./hello.sh</pre>
+                            </div>
+
+                            <div class="tip">
+                                <strong>💡 بديل:</strong>
+                                يمكنك تشغيل السكربت بدون إعطاءه executable permission عن طريق
+                                <code>bash hello.sh</code>.
+                            </div>
+
+                        </div>
+                    </article>
+
+                    <!-- LESSON 4 -->
+
+                    <article class="lesson" data-id="d1-4" data-day="1" data-search="echo comments تعليق طباعة النصوص #">
+
+                        <div class="lesson-head">
+
+                            <div class="lesson-number">04</div>
+
+                            <div class="lesson-info">
+                                <div class="lesson-title">
+                                    echo و Comments
+                                </div>
+                                <div class="lesson-meta">
+                                    طباعة المعلومات وكتابة التعليقات
+                                </div>
+                            </div>
+
+                            <label class="lesson-check">
+                                <input type="checkbox">
+                                <span class="custom-check">✓</span>
+                            </label>
+
+                            <span class="lesson-arrow">⌄</span>
+
+                        </div>
+
+                        <div class="lesson-body">
+
+                            <div class="explain-box">
+                                <strong>بالمختصر المفيد</strong>
+                                <p>
+                                    <b>echo</b> يطبع شيئًا على الشاشة.
+                                    أما <b>#</b> في بداية السطر فيجعل السطر تعليقًا لا ينفذه Bash.
+                                </p>
+                            </div>
+
+                            <div class="example-label">مثال</div>
+
+                            <div class="code-wrap">
+                                <button class="copy-btn">نسخ</button>
+                                <div class="code-header">
+                                    <div class="code-dots"><i></i><i></i><i></i></div>
+                                    <span class="code-hint">اضغط للتجربة</span>
+                                </div>
+                                <pre class="code" data-output="Welcome Ahmed
+Bash is awesome!" title="اضغط هنا لإظهار النتيجة في المحاكي">#!/bin/bash
+
+# This is a comment
+echo "Welcome Ahmed"
+echo "Bash is awesome!"</pre>
+                            </div>
+
+                        </div>
+                    </article>
+
+                    <!-- LESSON 5 -->
+
+                    <article class="lesson" data-id="d1-5" data-day="1" data-search="variables متغيرات variable = bash">
+
+                        <div class="lesson-head">
+
+                            <div class="lesson-number">05</div>
+
+                            <div class="lesson-info">
+                                <div class="lesson-title">
+                                    Variables — المتغيرات
+                                </div>
+                                <div class="lesson-meta">
+                                    تخزين البيانات واستخدامها
+                                </div>
+                            </div>
+
+                            <label class="lesson-check">
+                                <input type="checkbox">
+                                <span class="custom-check">✓</span>
+                            </label>
+
+                            <span class="lesson-arrow">⌄</span>
+
+                        </div>
+
+                        <div class="lesson-body">
+
+                            <div class="explain-box">
+                                <strong>بالمختصر المفيد</strong>
+                                <p>
+                                    المتغير عبارة عن اسم نخزن بداخله قيمة.
+                                    أهم قاعدة في Bash: <b>لا تضع مسافات حول =</b>.
+                                </p>
+                            </div>
+
+                            <div class="example-label">مثال</div>
+
+                            <div class="code-wrap">
+                                <button class="copy-btn">نسخ</button>
+                                <div class="code-header">
+                                    <div class="code-dots"><i></i><i></i><i></i></div>
+                                    <span class="code-hint">اضغط للتجربة</span>
+                                </div>
+                                <pre class="code" data-output="Name: Ahmed
+Age: 25" title="اضغط هنا لإظهار النتيجة في المحاكي">name="Ahmed"
+age=25
+
+echo "Name: $name"
+echo "Age: $age"</pre>
+                            </div>
+
+                            <div class="tip">
+                                <strong>⚠️ خطأ شائع:</strong>
+                                <code>name = "Ahmed"</code> خطأ.
+                                الصحيح هو <code>name="Ahmed"</code>.
+                            </div>
+
+                        </div>
+                    </article>
+
+                    <!-- LESSON 6 -->
+
+                    <article class="lesson" data-id="d1-6" data-day="1" data-search="read input user input قراءة مدخلات المستخدم">
+
+                        <div class="lesson-head">
+
+                            <div class="lesson-number">06</div>
+
+                            <div class="lesson-info">
+                                <div class="lesson-title">
+                                    read — أخذ Input من المستخدم
+                                </div>
+                                <div class="lesson-meta">
+                                    جعل السكربت تفاعليًا
+                                </div>
+                            </div>
+
+                            <label class="lesson-check">
+                                <input type="checkbox">
+                                <span class="custom-check">✓</span>
+                            </label>
+
+                            <span class="lesson-arrow">⌄</span>
+
+                        </div>
+
+                        <div class="lesson-body">
+
+                            <div class="explain-box">
+                                <strong>بالمختصر المفيد</strong>
+                                <p>
+                                    <b>read</b> يجعل السكربت ينتظر المستخدم لكي يكتب قيمة،
+                                    ثم يخزنها في متغير.
+                                </p>
+                            </div>
+
+                            <div class="example-label">مثال تفاعلي</div>
+
+                            <div class="code-wrap">
+                                <button class="copy-btn">نسخ</button>
+                                <div class="code-header">
+                                    <div class="code-dots"><i></i><i></i><i></i></div>
+                                    <span class="code-hint">اضغط للتجربة</span>
+                                </div>
+                                <pre class="code" data-output="Enter your name:
+Hello, Ahmed!" title="اضغط هنا لإظهار النتيجة في المحاكي">echo "Enter your name:"
+read name
+
+echo "Hello, $name!"</pre>
+                            </div>
+
+                            <div class="tip">
+                                <strong>💡 للتطبيق الحقيقي:</strong>
+                                جرّب كتابة السكربت في WSL ثم نفذه وستتمكن من إدخال قيمة فعلية.
+                            </div>
+
+                        </div>
+                    </article>
+
+                    <!-- LESSON 7 -->
+
+                    <article class="lesson" data-id="d1-7" data-day="1" data-search="arguments $1 $2 $# $@ exit status $? parameters">
+
+                        <div class="lesson-head">
+
+                            <div class="lesson-number">07</div>
+
+                            <div class="lesson-info">
+                                <div class="lesson-title">
+                                    Arguments وExit Status
+                                </div>
+                                <div class="lesson-meta">
+                                    $1 و$2 و$# و$@ و$?
+                                </div>
+                            </div>
+
+                            <label class="lesson-check">
+                                <input type="checkbox">
+                                <span class="custom-check">✓</span>
+                            </label>
+
+                            <span class="lesson-arrow">⌄</span>
+
+                        </div>
+
+                        <div class="lesson-body">
+
+                            <div class="explain-box">
+                                <strong>بالمختصر المفيد</strong>
+                                <p>
+                                    عندما تشغل السكربت وتكتب بعد اسمه قيمًا، هذه تسمى
+                                    <b>Arguments</b>. أول قيمة هي <b>$1</b> والثانية <b>$2</b>.
+                                    <b>$#</b> عددها، و<b>$@</b> يمثلها كلها.
+                                    أما <b>$?</b> فهو Exit Status لآخر أمر.
+                                </p>
+                            </div>
+
+                            <div class="example-label">مثال</div>
+
+                            <div class="code-wrap">
+                                <button class="copy-btn">نسخ</button>
+                                <div class="code-header">
+                                    <div class="code-dots"><i></i><i></i><i></i></div>
+                                    <span class="code-hint">اضغط للتجربة</span>
+                                </div>
+                                <pre class="code" data-output="$ bash greet.sh Ahmed Cairo
+Hello Ahmed
+Location: Cairo
+Arguments count: 2
+Status: 0" title="اضغط هنا لإظهار النتيجة في المحاكي">#!/bin/bash
+
+echo "Hello $1"
+echo "Location: $2"
+echo "Arguments count: $#"
+
+echo "Status: $?"</pre>
+                            </div>
+
+                            <div class="tip">
+                                <strong>💡 قاعدة مهمة:</strong>
+                                في Bash عادةً <code>0</code> يعني نجاح،
+                                وأي رقم غير صفر غالبًا يدل على وجود مشكلة.
+                            </div>
+
+                        </div>
+                    </article>
+
+                    <!-- NOTES DAY 1 -->
+
+                    <div class="notes-card">
+
+                        <div class="notes-title">
+                            <strong>📝 ملاحظات اليوم الأول</strong>
+                            <span class="saved-indicator" id="saved1">
+                                محفوظ تلقائيًا
+                            </span>
+                        </div>
+
+                        <textarea id="notes1" placeholder="اكتب هنا الأوامر أو الأفكار التي تريد الاحتفاظ بها..."></textarea>
+
+                    </div>
+
+                </section>
+
+                <!-- ========================= DAY 2 ========================= -->
+
+                <section class="day" id="day2">
+
+                    <div class="day-header">
+
+                        <div>
+                            <div class="day-kicker">DAY 02 / LOGIC &amp; CONTROL</div>
+                            <h2>الشروط والحلقات والملفات</h2>
+                            <div class="day-desc">
+                                من الدقيقة 01:08:10 إلى 01:34:20 — خلّي السكربت يفكر ويتكرر.
+                            </div>
+                        </div>
+
+                        <div class="day-tag">
+                            7 دروس
+                        </div>
+
+                    </div>
+
+                    <!-- LESSON 8 -->
+
+                    <article class="lesson" data-id="d2-1" data-day="2" data-search="if elif else fi conditions شروط">
+
+                        <div class="lesson-head">
+
+                            <div class="lesson-number">08</div>
+
+                            <div class="lesson-info">
+                                <div class="lesson-title">
+                                    if / elif / else
+                                </div>
+                                <div class="lesson-meta">
+                                    جعل السكربت يتخذ قرارات
+                                </div>
+                            </div>
+
+                            <label class="lesson-check">
+                                <input type="checkbox">
+                                <span class="custom-check">✓</span>
+                            </label>
+
+                            <span class="lesson-arrow">⌄</span>
+
+                        </div>
+
+                        <div class="lesson-body">
+
+                            <div class="explain-box">
+                                <strong>بالمختصر المفيد</strong>
+                                <p>
+                                    الجملة الشرطية تقول للسكربت:
+                                    "لو الشرط صحيح اعمل كذا، وإلا اعمل كذا".
+                                </p>
+                            </div>
+
+                            <div class="example-label">مثال</div>
+
+                            <div class="code-wrap">
+                                <button class="copy-btn">نسخ</button>
+                                <div class="code-header">
+                                    <div class="code-dots"><i></i><i></i><i></i></div>
+                                    <span class="code-hint">اضغط للتجربة</span>
+                                </div>
+                                <pre class="code" data-output="You are an adult." title="اضغط هنا لإظهار النتيجة في المحاكي">age=25
+
+if [ "$age" -ge 18 ]; then
+    echo "You are an adult."
+elif [ "$age" -ge 13 ]; then
+    echo "Teenager."
+else
+    echo "Child."
+fi</pre>
+                            </div>
+
+                            <div class="tip">
+                                <strong>💡 انتبه:</strong>
+                                المسافات داخل <code>[ ]</code> مهمة جدًا في Bash.
+                            </div>
+
+                        </div>
+                    </article>
+
+                    <!-- LESSON 9 -->
+
+                    <article class="lesson" data-id="d2-2" data-day="2" data-search="eq ne gt lt numbers strings comparison مقارنة أرقام نصوص">
+
+                        <div class="lesson-head">
+
+                            <div class="lesson-number">09</div>
+
+                            <div class="lesson-info">
+                                <div class="lesson-title">
+                                    مقارنات الأرقام والنصوص
+                                </div>
+                                <div class="lesson-meta">
+                                    -eq -ne -gt -lt و = !=
+                                </div>
+                            </div>
+
+                            <label class="lesson-check">
+                                <input type="checkbox">
+                                <span class="custom-check">✓</span>
+                            </label>
+
+                            <span class="lesson-arrow">⌄</span>
+
+                        </div>
+
+                        <div class="lesson-body">
+
+                            <div class="explain-box">
+                                <strong>بالمختصر المفيد</strong>
+                                <p>
+                                    Bash عنده operators مختلفة للأرقام عن النصوص.
+                                    للأرقام استخدم مثلًا <b>-eq</b> و<b>-gt</b>،
+                                    وللنصوص استخدم <b>=</b> و<b>!=</b>.
+                                </p>
+                            </div>
+
+                            <div class="example-label">مثال رقمي</div>
+
+                            <div class="code-wrap">
+                                <button class="copy-btn">نسخ</button>
+                                <div class="code-header">
+                                    <div class="code-dots"><i></i><i></i><i></i></div>
+                                    <span class="code-hint">اضغط للتجربة</span>
+                                </div>
+                                <pre class="code" data-output="10 is greater than 5" title="اضغط هنا لإظهار النتيجة في المحاكي">a=10
+b=5
+
+if [ "$a" -gt "$b" ]; then
+    echo "$a is greater than $b"
+fi</pre>
+                            </div>
+
+                            <div class="example-label">مثال نصي</div>
+
+                            <div class="code-wrap">
+                                <button class="copy-btn">نسخ</button>
+                                <div class="code-header">
+                                    <div class="code-dots"><i></i><i></i><i></i></div>
+                                    <span class="code-hint">اضغط للتجربة</span>
+                                </div>
+                                <pre class="code" data-output="Welcome Ahmed" title="اضغط هنا لإظهار النتيجة في المحاكي">name="Ahmed"
+
+if [ "$name" = "Ahmed" ]; then
+    echo "Welcome Ahmed"
+fi</pre>
+                            </div>
+
+                        </div>
+                    </article>
+
+                    <!-- LESSON 10 -->
+
+                    <article class="lesson" data-id="d2-3" data-day="2" data-search="file directory test -f -d files folders ملفات مجلدات">
+
+                        <div class="lesson-head">
+
+                            <div class="lesson-number">10</div>
+
+                            <div class="lesson-info">
+                                <div class="lesson-title">
+                                    فحص الملفات والمجلدات
+                                </div>
+                                <div class="lesson-meta">
+                                    -f و -d لاختبار وجود الملفات والمجلدات
+                                </div>
+                            </div>
+
+                            <label class="lesson-check">
+                                <input type="checkbox">
+                                <span class="custom-check">✓</span>
+                            </label>
+
+                            <span class="lesson-arrow">⌄</span>
+
+                        </div>
+
+                        <div class="lesson-body">
+
+                            <div class="explain-box">
+                                <strong>بالمختصر المفيد</strong>
+                                <p>
+                                    يمكنك سؤال Bash: هل هذا المسار ملف؟
+                                    هل هو مجلد؟ باستخدام operators مثل <b>-f</b> و<b>-d</b>.
+                                </p>
+                            </div>
+
+                            <div class="example-label">مثال</div>
+
+                            <div class="code-wrap">
+                                <button class="copy-btn">نسخ</button>
+                                <div class="code-header">
+                                    <div class="code-dots"><i></i><i></i><i></i></div>
+                                    <span class="code-hint">اضغط للتجربة</span>
+                                </div>
+                                <pre class="code" data-output="The file exists." title="اضغط هنا لإظهار النتيجة في المحاكي">file="notes.txt"
+
+if [ -f "$file" ]; then
+    echo "The file exists."
+else
+    echo "File not found."
+fi</pre>
+                            </div>
+
+                            <div class="tip">
+                                <strong>أمثلة إضافية:</strong>
+                                <code>-d</code> مجلد،
+                                <code>-e</code> موجود،
+                                <code>-r</code> قابل للقراءة،
+                                <code>-x</code> قابل للتنفيذ.
+                            </div>
+
+                        </div>
+                    </article>
+
+                    <!-- LESSON 11 -->
+
+                    <article class="lesson" data-id="d2-4" data-day="2" data-search="logical operators &amp;&amp; || ! and or not">
+
+                        <div class="lesson-head">
+
+                            <div class="lesson-number">11</div>
+
+                            <div class="lesson-info">
+                                <div class="lesson-title">
+                                    &amp;&amp; و || و !
+                                </div>
+                                <div class="lesson-meta">
+                                    ربط الشروط معًا
+                                </div>
+                            </div>
+
+                            <label class="lesson-check">
+                                <input type="checkbox">
+                                <span class="custom-check">✓</span>
+                            </label>
+
+                            <span class="lesson-arrow">⌄</span>
+
+                        </div>
+
+                        <div class="lesson-body">
+
+                            <div class="explain-box">
+                                <strong>بالمختصر المفيد</strong>
+                                <p>
+                                    <b>&amp;&amp;</b> معناها "والشرطان لازم ينجحوا".
+                                    <b>||</b> معناها "يكفي واحد".
+                                    <b>!</b> تعكس نتيجة الشرط.
+                                </p>
+                            </div>
+
+                            <div class="example-label">مثال</div>
+
+                            <div class="code-wrap">
+                                <button class="copy-btn">نسخ</button>
+                                <div class="code-header">
+                                    <div class="code-dots"><i></i><i></i><i></i></div>
+                                    <span class="code-hint">اضغط للتجربة</span>
+                                </div>
+                                <pre class="code" data-output="Access granted" title="اضغط هنا لإظهار النتيجة في المحاكي">age=25
+has_id=true
+
+if [ "$age" -ge 18 ] &amp;&amp; [ "$has_id" = true ]; then
+    echo "Access granted"
+fi</pre>
+                            </div>
+
+                        </div>
+                    </article>
+
+                    <!-- LESSON 12 -->
+
+                    <article class="lesson" data-id="d2-5" data-day="2" data-search="for loop while loop loops حلقات تكرار">
+
+                        <div class="lesson-head">
+
+                            <div class="lesson-number">12</div>
+
+                            <div class="lesson-info">
+                                <div class="lesson-title">
+                                    for و while Loops
+                                </div>
+                                <div class="lesson-meta">
+                                    تكرار الأوامر بدلًا من كتابتها مرة وراء مرة
+                                </div>
+                            </div>
+
+                            <label class="lesson-check">
+                                <input type="checkbox">
+                                <span class="custom-check">✓</span>
+                            </label>
+
+                            <span class="lesson-arrow">⌄</span>
+
+                        </div>
+
+                        <div class="lesson-body">
+
+                            <div class="explain-box">
+                                <strong>بالمختصر المفيد</strong>
+                                <p>
+                                    <b>for</b> ممتاز عندما تعرف المجموعة التي ستدور عليها.
+                                    <b>while</b> تستمر طالما الشرط صحيح.
+                                </p>
+                            </div>
+
+                            <div class="example-label">for loop</div>
+
+                            <div class="code-wrap">
+                                <button class="copy-btn">نسخ</button>
+                                <div class="code-header">
+                                    <div class="code-dots"><i></i><i></i><i></i></div>
+                                    <span class="code-hint">اضغط للتجربة</span>
+                                </div>
+                                <pre class="code" data-output="Hello Ahmed
+Hello Ali
+Hello Sara" title="اضغط هنا لإظهار النتيجة في المحاكي">for name in Ahmed Ali Sara; do
+    echo "Hello $name"
+done</pre>
+                            </div>
+
+                            <div class="example-label">while loop</div>
+
+                            <div class="code-wrap">
+                                <button class="copy-btn">نسخ</button>
+                                <div class="code-header">
+                                    <div class="code-dots"><i></i><i></i><i></i></div>
+                                    <span class="code-hint">اضغط للتجربة</span>
+                                </div>
+                                <pre class="code" data-output="1
+2
+3
+Done" title="اضغط هنا لإظهار النتيجة في المحاكي">count=1
+
+while [ "$count" -le 3 ]; do
+    echo "$count"
+    ((count++))
+done
+
+echo "Done"</pre>
+                            </div>
+
+                        </div>
+                    </article>
+
+                    <!-- LESSON 13 -->
+
+                    <article class="lesson" data-id="d2-6" data-day="2" data-search="break continue loop control توقف تخطي">
+
+                        <div class="lesson-head">
+
+                            <div class="lesson-number">13</div>
+
+                            <div class="lesson-info">
+                                <div class="lesson-title">
+                                    break و continue
+                                </div>
+                                <div class="lesson-meta">
+                                    التحكم في مسار الحلقة
+                                </div>
+                            </div>
+
+                            <label class="lesson-check">
+                                <input type="checkbox">
+                                <span class="custom-check">✓</span>
+                            </label>
+
+                            <span class="lesson-arrow">⌄</span>
+
+                        </div>
+
+                        <div class="lesson-body">
+
+                            <div class="explain-box">
+                                <strong>بالمختصر المفيد</strong>
+                                <p>
+                                    <b>break</b> يخرج من الحلقة بالكامل.
+                                    <b>continue</b> يتخطى الدورة الحالية ويذهب للتالية.
+                                </p>
+                            </div>
+
+                            <div class="example-label">مثال</div>
+
+                            <div class="code-wrap">
+                                <button class="copy-btn">نسخ</button>
+                                <div class="code-header">
+                                    <div class="code-dots"><i></i><i></i><i></i></div>
+                                    <span class="code-hint">اضغط للتجربة</span>
+                                </div>
+                                <pre class="code" data-output="1
+2
+4
+5" title="اضغط هنا لإظهار النتيجة في المحاكي">for n in 1 2 3 4 5; do
+
+    if [ "$n" -eq 3 ]; then
+        continue
+    fi
+
+    echo "$n"
+done</pre>
+                            </div>
+
+                        </div>
+                    </article>
+
+                    <!-- LESSON 14 -->
+
+                    <article class="lesson" data-id="d2-7" data-day="2" data-search="case menu menu options قائمة اختيارات case">
+
+                        <div class="lesson-head">
+
+                            <div class="lesson-number">14</div>
+
+                            <div class="lesson-info">
+                                <div class="lesson-title">
+                                    case — بناء Menu تفاعلي
+                                </div>
+                                <div class="lesson-meta">
+                                    بديل مرتب لسلسلة if طويلة
+                                </div>
+                            </div>
+
+                            <label class="lesson-check">
+                                <input type="checkbox">
+                                <span class="custom-check">✓</span>
+                            </label>
+
+                            <span class="lesson-arrow">⌄</span>
+
+                        </div>
+
+                        <div class="lesson-body">
+
+                            <div class="explain-box">
+                                <strong>بالمختصر المفيد</strong>
+                                <p>
+                                    <b>case</b> ممتاز عندما يكون عندك مجموعة خيارات معروفة،
+                                    مثل Menu فيها Start وStop وExit.
+                                </p>
+                            </div>
+
+                            <div class="example-label">مثال Menu</div>
+
+                            <div class="code-wrap">
+                                <button class="copy-btn">نسخ</button>
+                                <div class="code-header">
+                                    <div class="code-dots"><i></i><i></i><i></i></div>
+                                    <span class="code-hint">اضغط للتجربة</span>
+                                </div>
+                                <pre class="code" data-output="1) Start
+2) Stop
+3) Exit
+Selected: Start" title="اضغط هنا لإظهار النتيجة في المحاكي">echo "1) Start"
+echo "2) Stop"
+echo "3) Exit"
+
+read choice
+
+case "$choice" in
+    1) echo "Selected: Start" ;;
+    2) echo "Selected: Stop" ;;
+    3) echo "Selected: Exit" ;;
+    *) echo "Invalid option" ;;
+esac</pre>
+                            </div>
+
+                            <div class="tip">
+                                <strong>💡 نصيحة:</strong>
+                                case تجعل الـ Menus في Bash أكثر نظافة وأسهل في القراءة.
+                            </div>
+
+                        </div>
+                    </article>
+
+                    <!-- NOTES DAY 2 -->
+
+                    <div class="notes-card">
+
+                        <div class="notes-title">
+                            <strong>📝 ملاحظات اليوم الثاني</strong>
+                            <span class="saved-indicator" id="saved2">
+                                محفوظ تلقائيًا
+                            </span>
+                        </div>
+
+                        <textarea id="notes2" placeholder="اكتب هنا أهم الشروط والحلقات والأوامر..."></textarea>
+
+                    </div>
+
+                </section>
+
+                <!-- ========================= DAY 3 ========================= -->
+
+                <section class="day" id="day3">
+
+                    <div class="day-header">
+
+                        <div>
+                            <div class="day-kicker">DAY 03 / AUTOMATION</div>
+                            <h2>الباش المتقدم والأتمتة</h2>
+                            <div class="day-desc">
+                                من 32:05 إلى 01:08:10 + آخر الفيديو — Functions وArrays وPipes وDebugging.
+                            </div>
+                        </div>
+
+                        <div class="day-tag">
+                            7 دروس
+                        </div>
+
+                    </div>
+
+                    <!-- LESSON 15 -->
+
+                    <article class="lesson" data-id="d3-1" data-day="3" data-search="functions function parameters return دوال بارامترات">
+
+                        <div class="lesson-head">
+
+                            <div class="lesson-number">15</div>
+
+                            <div class="lesson-info">
+                                <div class="lesson-title">
+                                    Functions — الدوال
+                                </div>
+                                <div class="lesson-meta">
+                                    تنظيم الكود وإعادة استخدامه
+                                </div>
+                            </div>
+
+                            <label class="lesson-check">
+                                <input type="checkbox">
+                                <span class="custom-check">✓</span>
+                            </label>
+
+                            <span class="lesson-arrow">⌄</span>
+
+                        </div>
+
+                        <div class="lesson-body">
+
+                            <div class="explain-box">
+                                <strong>بالمختصر المفيد</strong>
+                                <p>
+                                    الـ Function هي جزء من الكود تسميه مرة، ثم تستدعيه كلما احتجته.
+                                    الـ Parameters تصل داخل الدالة كـ <b>$1</b> و<b>$2</b>،
+                                    و<b>return</b> يرجع Exit Status.
+                                </p>
+                            </div>
+
+                            <div class="example-label">مثال</div>
+
+                            <div class="code-wrap">
+                                <button class="copy-btn">نسخ</button>
+                                <div class="code-header">
+                                    <div class="code-dots"><i></i><i></i><i></i></div>
+                                    <span class="code-hint">اضغط للتجربة</span>
+                                </div>
+                                <pre class="code" data-output="Hello Ahmed
+Hello Ali" title="اضغط هنا لإظهار النتيجة في المحاكي">greet() {
+    echo "Hello $1"
+}
+
+greet "Ahmed"
+greet "Ali"</pre>
+                            </div>
+
+                            <div class="tip">
+                                <strong>⚠️ مهم:</strong>
+                                <code>return</code> في Bash يرجع status code،
+                                وليس نصًا مثل بعض لغات البرمجة. لإرجاع نص عادةً استخدم
+                                command substitution مثل <code>result=$(function)</code>.
+                            </div>
+
+                        </div>
+                    </article>
+
+                    <!-- LESSON 16 -->
+
+                    <article class="lesson" data-id="d3-2" data-day="3" data-search="arrays array indexed arrays مصفوفات">
+
+                        <div class="lesson-head">
+
+                            <div class="lesson-number">16</div>
+
+                            <div class="lesson-info">
+                                <div class="lesson-title">
+                                    Arrays — المصفوفات
+                                </div>
+                                <div class="lesson-meta">
+                                    تخزين أكثر من قيمة في متغير واحد
+                                </div>
+                            </div>
+
+                            <label class="lesson-check">
+                                <input type="checkbox">
+                                <span class="custom-check">✓</span>
+                            </label>
+
+                            <span class="lesson-arrow">⌄</span>
+
+                        </div>
+
+                        <div class="lesson-body">
+
+                            <div class="explain-box">
+                                <strong>بالمختصر المفيد</strong>
+                                <p>
+                                    الـ Array تخليك تخزن مجموعة قيم مع بعض.
+                                    الوصول يبدأ من index رقم <b>0</b>.
+                                </p>
+                            </div>
+
+                            <div class="example-label">مثال</div>
+
+                            <div class="code-wrap">
+                                <button class="copy-btn">نسخ</button>
+                                <div class="code-header">
+                                    <div class="code-dots"><i></i><i></i><i></i></div>
+                                    <span class="code-hint">اضغط للتجربة</span>
+                                </div>
+                                <pre class="code" data-output="Linux
+Bash
+Git
+Docker" title="اضغط هنا لإظهار النتيجة في المحاكي">tools=("Linux" "Bash" "Git" "Docker")
+
+echo "${tools[0]}"
+
+for tool in "${tools[@]}"; do
+    echo "$tool"
+done</pre>
+                            </div>
+
+                            <div class="tip">
+                                <strong>مفيد جدًا:</strong>
+                                عدد العناصر:
+                                <code>${#tools[@]}</code>
+                                وكل العناصر:
+                                <code>${tools[@]}</code>
+                            </div>
+
+                        </div>
+                    </article>
+
+                    <!-- LESSON 17 -->
+
+                    <article class="lesson" data-id="d3-3" data-day="3" data-search="grep cut sort wc text processing filtering فلترة نصوص">
+
+                        <div class="lesson-head">
+
+                            <div class="lesson-number">17</div>
+
+                            <div class="lesson-info">
+                                <div class="lesson-title">
+                                    grep و cut و sort و wc
+                                </div>
+                                <div class="lesson-meta">
+                                    أدوات Bash القوية لمعالجة النصوص
+                                </div>
+                            </div>
+
+                            <label class="lesson-check">
+                                <input type="checkbox">
+                                <span class="custom-check">✓</span>
+                            </label>
+
+                            <span class="lesson-arrow">⌄</span>
+
+                        </div>
+
+                        <div class="lesson-body">
+
+                            <div class="explain-box">
+                                <strong>بالمختصر المفيد</strong>
+                                <p>
+                                    هذه الأدوات من أهم أسباب قوة Shell:
+                                    <b>grep</b> يبحث،
+                                    <b>cut</b> يقتطع أجزاء،
+                                    <b>sort</b> يرتب،
+                                    <b>wc</b> يعد.
+                                </p>
+                            </div>
+
+                            <div class="example-label">grep</div>
+
+                            <div class="code-wrap">
+                                <button class="copy-btn">نسخ</button>
+                                <div class="code-header">
+                                    <div class="code-dots"><i></i><i></i><i></i></div>
+                                    <span class="code-hint">اضغط للتجربة</span>
+                                </div>
+                                <pre class="code" data-output="Ahmed
+Ahmed" title="اضغط هنا لإظهار النتيجة في المحاكي">printf "Ahmed
+Ali
+Ahmed
+Sara" | grep "Ahmed"</pre>
+                            </div>
+
+                            <div class="example-label">sort + wc</div>
+
+                            <div class="code-wrap">
+                                <button class="copy-btn">نسخ</button>
+                                <div class="code-header">
+                                    <div class="code-dots"><i></i><i></i><i></i></div>
+                                    <span class="code-hint">اضغط للتجربة</span>
+                                </div>
+                                <pre class="code" data-output="Ahmed
+Ali
+Sara
+3" title="اضغط هنا لإظهار النتيجة في المحاكي">printf "Sara
+Ahmed
+Ali" | sort
+printf "Sara
+Ahmed
+Ali" | wc -l</pre>
+                            </div>
+
+                        </div>
+                    </article>
+
+                    <!-- LESSON 18 -->
+
+                    <article class="lesson" data-id="d3-4" data-day="3" data-search="redirection pipes pipe output append error 2&gt;&amp;1 &gt; &gt;&gt; |">
+
+                        <div class="lesson-head">
+
+                            <div class="lesson-number">18</div>
+
+                            <div class="lesson-info">
+                                <div class="lesson-title">
+                                    Redirection و Pipes
+                                </div>
+                                <div class="lesson-meta">
+                                    نقل المخرجات بين الأوامر والملفات
+                                </div>
+                            </div>
+
+                            <label class="lesson-check">
+                                <input type="checkbox">
+                                <span class="custom-check">✓</span>
+                            </label>
+
+                            <span class="lesson-arrow">⌄</span>
+
+                        </div>
+
+                        <div class="lesson-body">
+
+                            <div class="explain-box">
+                                <strong>بالمختصر المفيد</strong>
+                                <p>
+                                    بدل ما تظل النتيجة على الشاشة، يمكنك إرسالها إلى ملف أو إلى أمر آخر.
+                                    <b>&gt;</b> يكتب من جديد، <b>&gt;&gt;</b> يضيف،
+                                    و<b>|</b> يرسل Output لأمر آخر.
+                                </p>
+                            </div>
+
+                            <div class="example-label">Redirection</div>
+
+                            <div class="code-wrap">
+                                <button class="copy-btn">نسخ</button>
+                                <div class="code-header">
+                                    <div class="code-dots"><i></i><i></i><i></i></div>
+                                    <span class="code-hint">اضغط للتجربة</span>
+                                </div>
+                                <pre class="code" data-output="Output is redirected to output.txt
+Append another line to output.txt" title="اضغط هنا لإظهار النتيجة في المحاكي">echo "First line" &gt; output.txt
+echo "Second line" &gt;&gt; output.txt</pre>
+                            </div>
+
+                            <div class="example-label">Pipe</div>
+
+                            <div class="code-wrap">
+                                <button class="copy-btn">نسخ</button>
+                                <div class="code-header">
+                                    <div class="code-dots"><i></i><i></i><i></i></div>
+                                    <span class="code-hint">اضغط للتجربة</span>
+                                </div>
+                                <pre class="code" data-output="3" title="اضغط هنا لإظهار النتيجة في المحاكي">printf "Bash
+Linux
+Docker" | wc -l</pre>
+                            </div>
+
+                            <div class="tip">
+                                <strong>💡 2&gt;&amp;1:</strong>
+                                تعني توجيه Standard Error إلى نفس المكان الذي يذهب إليه Standard Output.
+                                مفيدة جدًا مع الـ logs.
+                            </div>
+
+                        </div>
+                    </article>
+
+                    <!-- LESSON 19 -->
+
+                    <article class="lesson" data-id="d3-5" data-day="3" data-search="debugging bash -x trace errors تتبع أخطاء">
+
+                        <div class="lesson-head">
+
+                            <div class="lesson-number">19</div>
+
+                            <div class="lesson-info">
+                                <div class="lesson-title">
+                                    Debugging باستخدام bash -x
+                                </div>
+                                <div class="lesson-meta">
+                                    مشاهدة الأوامر أثناء تنفيذها
+                                </div>
+                            </div>
+
+                            <label class="lesson-check">
+                                <input type="checkbox">
+                                <span class="custom-check">✓</span>
+                            </label>
+
+                            <span class="lesson-arrow">⌄</span>
+
+                        </div>
+
+                        <div class="lesson-body">
+
+                            <div class="explain-box">
+                                <strong>بالمختصر المفيد</strong>
+                                <p>
+                                    عندما السكربت لا يعمل كما تتوقع، <b>bash -x</b>
+                                    يعرض لك الأوامر بعد توسعة المتغيرات أثناء التنفيذ.
+                                    هذا يجعل تتبع الخطأ أسهل.
+                                </p>
+                            </div>
+
+                            <div class="example-label">مثال</div>
+
+                            <div class="code-wrap">
+                                <button class="copy-btn">نسخ</button>
+                                <div class="code-header">
+                                    <div class="code-dots"><i></i><i></i><i></i></div>
+                                    <span class="code-hint">اضغط للتجربة</span>
+                                </div>
+                                <pre class="code" data-output="+ name=Ahmed
++ echo &#39;Hello Ahmed&#39;
+Hello Ahmed" title="اضغط هنا لإظهار النتيجة في المحاكي">#!/bin/bash
+
+name="Ahmed"
+echo "Hello $name"</pre>
+                            </div>
+
+                            <div class="example-label">التشغيل مع Debugging</div>
+
+                            <div class="code-wrap">
+                                <button class="copy-btn">نسخ</button>
+                                <div class="code-header">
+                                    <div class="code-dots"><i></i><i></i><i></i></div>
+                                    <span class="code-hint">الأمر المهم</span>
+                                </div>
+                                <pre class="code" data-output="+ name=Ahmed
++ echo &#39;Hello Ahmed&#39;
+Hello Ahmed" title="اضغط هنا لإظهار النتيجة في المحاكي">bash -x script.sh</pre>
+                            </div>
+
+                        </div>
+                    </article>
+
+                    <!-- LESSON 20 -->
+
+                    <article class="lesson" data-id="d3-6" data-day="3" data-search="automation scripting automation الأتمتة bash script">
+
+                        <div class="lesson-head">
+
+                            <div class="lesson-number">20</div>
+
+                            <div class="lesson-info">
+                                <div class="lesson-title">
+                                    تجميع الأدوات في Automation Script
+                                </div>
+                                <div class="lesson-meta">
+                                    تحويل المهارات السابقة إلى أداة عملية
+                                </div>
+                            </div>
+
+                            <label class="lesson-check">
+                                <input type="checkbox">
+                                <span class="custom-check">✓</span>
+                            </label>
+
+                            <span class="lesson-arrow">⌄</span>
+
+                        </div>
+
+                        <div class="lesson-body">
+
+                            <div class="explain-box">
+                                <strong>بالمختصر المفيد</strong>
+                                <p>
+                                    قوة Bash تظهر عندما تجمع Variables + Functions + Conditions
+                                    + Loops + Commands في Script واحد يقوم بمهمة كاملة تلقائيًا.
+                                </p>
+                            </div>
+
+                            <div class="example-label">مثال Automation بسيط</div>
+
+                            <div class="code-wrap">
+                                <button class="copy-btn">نسخ</button>
+                                <div class="code-header">
+                                    <div class="code-dots"><i></i><i></i><i></i></div>
+                                    <span class="code-hint">اضغط للتجربة</span>
+                                </div>
+                                <pre class="code" data-output="System check
+Date: Thu Aug 13
+User: Ahmed
+Check completed successfully." title="اضغط هنا لإظهار النتيجة في المحاكي">#!/bin/bash
+
+echo "System check"
+echo "Date: $(date)"
+echo "User: $USER"
+
+if command -v bash &gt;/dev/null 2&gt;&amp;1; then
+    echo "Bash is installed."
+fi
+
+echo "Check completed successfully."</pre>
+                            </div>
+
+                        </div>
+                    </article>
+
+                    <!-- LESSON 21 -->
+
+                    <article class="lesson" data-id="d3-7" data-day="3" data-search="final project مشروع نهائي bash scripting challenge">
+
+                        <div class="lesson-head">
+
+                            <div class="lesson-number">21</div>
+
+                            <div class="lesson-info">
+                                <div class="lesson-title">
+                                    التحدي النهائي — Bash Mini Project
+                                </div>
+                                <div class="lesson-meta">
+                                    اجمع كل ما تعلمته في مشروع واحد
+                                </div>
+                            </div>
+
+                            <label class="lesson-check">
+                                <input type="checkbox">
+                                <span class="custom-check">✓</span>
+                            </label>
+
+                            <span class="lesson-arrow">⌄</span>
+
+                        </div>
+
+                        <div class="lesson-body">
+
+                            <div class="explain-box">
+                                <strong>🎯 المطلوب</strong>
+                                <p>
+                                    اكتب Script يعرض Menu للمستخدم، ويحتوي على Functions،
+                                    ويستقبل اختيار المستخدم باستخدام <b>read</b>،
+                                    ثم يستخدم <b>case</b> لتنفيذ العمليات.
+                                    اجعل السكربت يتكرر حتى يختار المستخدم Exit.
+                                </p>
+                            </div>
+
+                            <div class="example-label">بداية مشروع مقترحة</div>
+
+                            <div class="code-wrap">
+                                <button class="copy-btn">نسخ</button>
+                                <div class="code-header">
+                                    <div class="code-dots"><i></i><i></i><i></i></div>
+                                    <span class="code-hint">اضغط للتجربة</span>
+                                </div>
+                                <pre class="code" data-output="===== Bash Toolkit =====
+1) System Info
+2) Current Directory
+3) Exit
+========================
+Choose: 1
+System information goes here..." title="اضغط هنا لإظهار النتيجة في المحاكي">#!/bin/bash
+
+show_menu() {
+    echo "===== Bash Toolkit ====="
+    echo "1) System Info"
+    echo "2) Current Directory"
+    echo "3) Exit"
+    echo "========================"
+}
+
+while true; do
+
+    show_menu
+    read -p "Choose: " choice
+
+    case "$choice" in
+        1)
+            echo "System information goes here..."
+            ;;
+        2)
+            pwd
+            ;;
+        3)
+            echo "Goodbye!"
+            break
+            ;;
+        *)
+            echo "Invalid option."
+            ;;
+    esac
+
+done</pre>
+                            </div>
+
+                            <div class="tip">
+                                <strong>🏆 بعد إنهاء المشروع:</strong>
+                                أنت الآن قادر على بناء Scripts صغيرة لأتمتة المهام المتكررة
+                                في Linux وWSL، وهي نقطة بداية ممتازة للتعمق أكثر في Bash.
+                            </div>
+
+                        </div>
+                    </article>
+
+                    <!-- NOTES DAY 3 -->
+
+                    <div class="notes-card">
+
+                        <div class="notes-title">
+                            <strong>📝 ملاحظات اليوم الثالث</strong>
+                            <span class="saved-indicator" id="saved3">
+                                محفوظ تلقائيًا
+                            </span>
+                        </div>
+
+                        <textarea id="notes3" placeholder="اكتب هنا أفكار المشروع النهائي والأوامر المتقدمة..."></textarea>
+
+                    </div>
+
+                </section>
+
+                <!-- ========================= WIDGETS ========================= -->
+
+                <section class="widgets-grid">
+
+                    <!-- POMODORO -->
+
+                    <div class="widget">
+
+                        <div class="widget-title">
+                            <span>◷</span>
+                            Pomodoro Timer
+                        </div>
+
+                        <div class="timer">
+
+                            <div class="timer-mode" id="timerMode">وقت المذاكرة — 25 دقيقة</div>
+
+                            <div class="timer-display" id="timerDisplay">25:00</div>
+
+                            <div class="timer-controls">
+
+                                <button class="timer-btn primary" id="timerStart">
+                                    تشغيل
+                                </button>
+
+                                <button class="timer-btn" id="timerPause">
+                                    إيقاف مؤقت
+                                </button>
+
+                                <button class="timer-btn" id="timerReset">
+                                    إعادة تعيين
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <!-- TERMINAL -->
+
+                    <div class="widget terminal-widget">
+
+                        <div class="widget-title">
+                            <span>$_</span>
+                            Bash Terminal Simulator
+                        </div>
+
+                        <div class="terminal">
+
+                            <div class="terminal-bar">
+                                <i></i>
+                                <i></i>
+                                <i></i>
+                                <span class="terminal-title">
+                                    bash — simulator
+                                </span>
+                            </div>
+
+                            <div class="terminal-screen" id="terminalScreen">
+                                <div class="muted">
+                                    # أهلاً بك في المحاكي
+                                    # اضغط على أي مثال Code في الدروس
+                                    # أو اكتب أمرًا بسيطًا هنا.
+                                </div>
+                                <br>
+                                <span class="prompt">$ </span>
+                                <span class="cyan">ready</span>
+                            </div>
+
+                            <div class="terminal-input-row">
+                                <span>$</span>
+                                <input class="terminal-input" id="terminalInput" placeholder="اكتب أمرًا مثل: echo Hello" autocomplete="off">
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+                <!-- ========================= CHEAT SHEET ========================= -->
+
+                <section class="cheat-section" id="cheat">
+
+                    <div class="section-title">
+                        📚 قاموس الأوامر السريع
+                    </div>
+
+                    <div class="section-subtitle">
+                        مرجع سريع لأكثر أوامر Bash التي تحتاجها في رحلة التعلم.
+                    </div>
+
+                    <div class="table-wrap">
+
+                        <table class="cheat-table">
+
+                            <thead>
+                                <tr>
+                                    <th>الأمر / الصيغة</th>
+                                    <th>الاستخدام</th>
+                                    <th>مثال</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+
+                                <tr>
+                                    <td><code>echo</code></td>
+                                    <td>طباعة نص</td>
+                                    <td><code>echo "Hello"</code></td>
+                                </tr>
+
+                                <tr>
+                                    <td><code>read</code></td>
+                                    <td>قراءة Input من المستخدم</td>
+                                    <td><code>read name</code></td>
+                                </tr>
+
+                                <tr>
+                                    <td><code>chmod +x</code></td>
+                                    <td>إضافة صلاحية التنفيذ</td>
+                                    <td><code>chmod +x script.sh</code></td>
+                                </tr>
+
+                                <tr>
+                                    <td><code>bash</code></td>
+                                    <td>تشغيل Script بواسطة Bash</td>
+                                    <td><code>bash script.sh</code></td>
+                                </tr>
+
+                                <tr>
+                                    <td><code>if</code></td>
+                                    <td>تنفيذ بناءً على شرط</td>
+                                    <td><code>if [ "$x" -gt 5 ]</code></td>
+                                </tr>
+
+                                <tr>
+                                    <td><code>case</code></td>
+                                    <td>اختيار بين حالات متعددة</td>
+                                    <td><code>case "$x" in</code></td>
+                                </tr>
+
+                                <tr>
+                                    <td><code>for</code></td>
+                                    <td>Loop على مجموعة</td>
+                                    <td><code>for x in a b c</code></td>
+                                </tr>
+
+                                <tr>
+                                    <td><code>while</code></td>
+                                    <td>تكرار طالما الشرط صحيح</td>
+                                    <td><code>while [ "$x" -lt 5 ]</code></td>
+                                </tr>
+
+                                <tr>
+                                    <td><code>break</code></td>
+                                    <td>الخروج من الحلقة</td>
+                                    <td><code>break</code></td>
+                                </tr>
+
+                                <tr>
+                                    <td><code>continue</code></td>
+                                    <td>تخطي الدورة الحالية</td>
+                                    <td><code>continue</code></td>
+                                </tr>
+
+                                <tr>
+                                    <td><code>grep</code></td>
+                                    <td>البحث داخل النص</td>
+                                    <td><code>grep "error" log.txt</code></td>
+                                </tr>
+
+                                <tr>
+                                    <td><code>cut</code></td>
+                                    <td>اقتطاع أعمدة/أجزاء</td>
+                                    <td><code>cut -d: -f1 /etc/passwd</code></td>
+                                </tr>
+
+                                <tr>
+                                    <td><code>sort</code></td>
+                                    <td>ترتيب الأسطر</td>
+                                    <td><code>sort names.txt</code></td>
+                                </tr>
+
+                                <tr>
+                                    <td><code>wc</code></td>
+                                    <td>عد الأسطر/الكلمات/الحروف</td>
+                                    <td><code>wc -l file.txt</code></td>
+                                </tr>
+
+                                <tr>
+                                    <td><code>pwd</code></td>
+                                    <td>عرض المجلد الحالي</td>
+                                    <td><code>pwd</code></td>
+                                </tr>
+
+                                <tr>
+                                    <td><code>ls</code></td>
+                                    <td>عرض الملفات</td>
+                                    <td><code>ls -la</code></td>
+                                </tr>
+
+                                <tr>
+                                    <td><code>cd</code></td>
+                                    <td>تغيير المجلد</td>
+                                    <td><code>cd /home</code></td>
+                                </tr>
+
+                                <tr>
+                                    <td><code>&gt;</code></td>
+                                    <td>كتابة Output في ملف</td>
+                                    <td><code>echo hi &gt; file</code></td>
+                                </tr>
+
+                                <tr>
+                                    <td><code>&gt;&gt;</code></td>
+                                    <td>إضافة Output إلى ملف</td>
+                                    <td><code>echo hi &gt;&gt; file</code></td>
+                                </tr>
+
+                                <tr>
+                                    <td><code>|</code></td>
+                                    <td>إرسال Output لأمر آخر</td>
+                                    <td><code>ls | grep sh</code></td>
+                                </tr>
+
+                                <tr>
+                                    <td><code>2&gt;&amp;1</code></td>
+                                    <td>دمج Error مع Output</td>
+                                    <td><code>cmd &gt; log 2&gt;&amp;1</code></td>
+                                </tr>
+
+                                <tr>
+                                    <td><code>bash -x</code></td>
+                                    <td>Debug / Trace</td>
+                                    <td><code>bash -x script.sh</code></td>
+                                </tr>
+
+                                <tr>
+                                    <td><code>$?</code></td>
+                                    <td>Exit Status لآخر أمر</td>
+                                    <td><code>echo $?</code></td>
+                                </tr>
+
+                                <tr>
+                                    <td><code>$1</code></td>
+                                    <td>أول Argument</td>
+                                    <td><code>echo $1</code></td>
+                                </tr>
+
+                                <tr>
+                                    <td><code>$#</code></td>
+                                    <td>عدد Arguments</td>
+                                    <td><code>echo $#</code></td>
+                                </tr>
+
+                                <tr>
+                                    <td><code>$@</code></td>
+                                    <td>كل Arguments</td>
+                                    <td><code>echo "$@"</code></td>
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </section>
+
+                <footer>
+                    Bash Academy — 3 Days Interactive Challenge
+                    <br>
+                    <span>تعلم • طبّق • جرّب • أتمت</span>
+                </footer>
+
+            </div>
+
+        </main>
+
+    </div>
+
+    <!-- TOAST -->
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        /* =========================================================
+           BASH ACADEMY
+           Single-file application
+           ========================================================= */
+
+        "use strict";
+
+        /* =========================================================
+           STORAGE
+        ========================================================= */
+
+        const STORAGE_KEY = "bashAcademyState_v1";
+
+        const defaultState = {
+            completed: {},
+            notes: {
+                1: "",
+                2: "",
+                3: ""
+            }
+        };
+
+        let state = loadState();
+
+        function loadState() {
+            try {
+                const raw = localStorage.getItem(STORAGE_KEY);
+
+                if (!raw) {
+                    return structuredClone(defaultState);
+                }
+
+                const parsed = JSON.parse(raw);
+
+                return {
+                    completed: parsed.completed || {},
+                    notes: {
+                        1: parsed.notes?.[1] || "",
+                        2: parsed.notes?.[2] || "",
+                        3: parsed.notes?.[3] || ""
+                    }
+                };
+
+            } catch (error) {
+                console.warn("Could not load saved state.", error);
+                return structuredClone(defaultState);
+            }
+        }
+
+        function saveState() {
+            try {
+                localStorage.setItem(
+                    STORAGE_KEY,
+                    JSON.stringify(state)
+                );
+            } catch (error) {
+                console.warn("Could not save state.", error);
+            }
+        }
+
+        /* =========================================================
+           HELPERS
+        ========================================================= */
+
+        const $ = selector => document.querySelector(selector);
+
+        const $$ = selector =>
+            Array.from(document.querySelectorAll(selector));
+
+        function showToast(message, type = "") {
+            const toast = $("#toast");
+
+            toast.textContent = message;
+            toast.className = "toast show " + type;
+
+            clearTimeout(showToast.timer);
+
+            showToast.timer = setTimeout(() => {
+                toast.className = "toast";
+            }, 2200);
+        }
+
+        /* =========================================================
+           LESSON STATE
+        ========================================================= */
+
+        const lessons = $$(".lesson");
+
+        function initializeLessons() {
+
+            lessons.forEach(lesson => {
+
+                const id = lesson.dataset.id;
+                const checkbox = lesson.querySelector(
+                    'input[type="checkbox"]'
+                );
+
+                checkbox.checked = !!state.completed[id];
+
+                if (checkbox.checked) {
+                    lesson.classList.add("completed");
+                }
+
+                checkbox.addEventListener("click", event => {
+                    event.stopPropagation();
+
+                    state.completed[id] = checkbox.checked;
+
+                    lesson.classList.toggle(
+                        "completed",
+                        checkbox.checked
+                    );
+
+                    saveState();
+                    updateProgress();
+
+                    if (checkbox.checked) {
+                        showToast("تم تسجيل الدرس كمكتمل ✓", "success");
+                    }
+                });
+
+                const head = lesson.querySelector(".lesson-head");
+
+                head.addEventListener("click", event => {
+
+                    if (
+                        event.target.closest(".lesson-check") ||
+                        event.target.closest("input")
+                    ) {
+                        return;
+                    }
+
+                    lesson.classList.toggle("open");
+
+                });
+
+            });
+        }
+
+        /* =========================================================
+           PROGRESS
+        ========================================================= */
+
+        function updateProgress() {
+
+            const total = lessons.length;
+
+            const completed = lessons.filter(
+                lesson => state.completed[lesson.dataset.id]
+            ).length;
+
+            const percent = total === 0
+                ? 0
+                : Math.round((completed / total) * 100);
+
+            $("#globalPercent").textContent = percent + "%";
+            $("#globalProgress").style.width = percent + "%";
+
+            $("#completedCount").textContent =
+                `${completed} من ${total} درس مكتمل`;
+
+            $("#remainingCount").textContent =
+                `${total - completed} درس متبقي`;
+
+            [1, 2, 3].forEach(day => {
+
+                const dayLessons = lessons.filter(
+                    lesson => lesson.dataset.day === String(day)
+                );
+
+                const dayCompleted = dayLessons.filter(
+                    lesson => state.completed[lesson.dataset.id]
+                ).length;
+
+                const dayPercent = dayLessons.length
+                    ? Math.round(
+                        (dayCompleted / dayLessons.length) * 100
+                    )
+                    : 0;
+
+                const fill = $(`#sideProgress${day}`);
+                const percentElement = $(`#sidePercent${day}`);
+
+                if (fill) {
+                    fill.style.width = dayPercent + "%";
+                }
+
+                if (percentElement) {
+                    percentElement.textContent =
+                        dayPercent + "%";
+                }
+            });
+        }
+
+        /* =========================================================
+           NOTES
+        ========================================================= */
+
+        function initializeNotes() {
+
+            [1, 2, 3].forEach(day => {
+
+                const textarea = $(`#notes${day}`);
+                const indicator = $(`#saved${day}`);
+
+                if (!textarea) return;
+
+                textarea.value = state.notes[day] || "";
+
+                textarea.addEventListener("input", () => {
+
+                    state.notes[day] = textarea.value;
+                    saveState();
+
+                    indicator.textContent = "يتم الحفظ تلقائيًا ✓";
+
+                    clearTimeout(textarea.saveTimer);
+
+                    textarea.saveTimer = setTimeout(() => {
+                        indicator.textContent = "محفوظ تلقائيًا";
+                    }, 700);
+
+                });
+            });
+        }
+
+        /* =========================================================
+           NAVIGATION
+        ========================================================= */
+
+        function scrollToTarget(target) {
+
+            const element = document.getElementById(target);
+
+            if (!element) return;
+
+            element.scrollIntoView({
+                behavior: "smooth",
+                block: "start"
+            });
+
+            $("#sidebar").classList.remove("open");
+        }
+
+        $$(".nav-item").forEach(button => {
+
+            button.addEventListener("click", () => {
+
+                const target = button.dataset.target;
+
+                $$(".nav-item").forEach(item =>
+                    item.classList.remove("active")
+                );
+
+                button.classList.add("active");
+
+                scrollToTarget(target);
+            });
+
+        });
+
+        $$(".day-nav").forEach(item => {
+
+            item.addEventListener("click", () => {
+                scrollToTarget(item.dataset.target);
+            });
+
+        });
+
+        /* =========================================================
+           MOBILE MENU
+        ========================================================= */
+
+        $("#mobileMenu").addEventListener("click", () => {
+            $("#sidebar").classList.toggle("open");
+        });
+
+        /* =========================================================
+           EXPAND / COLLAPSE
+        ========================================================= */
+
+        $("#expandAll").addEventListener("click", () => {
+
+            lessons.forEach(lesson => {
+                lesson.classList.add("open");
+            });
+
+            showToast("تم فتح جميع الدروس");
+        });
+
+        $("#collapseAll").addEventListener("click", () => {
+
+            lessons.forEach(lesson => {
+                lesson.classList.remove("open");
+            });
+
+            showToast("تم إغلاق جميع الدروس");
+        });
+
+        /* =========================================================
+           COPY CODE
+        ========================================================= */
+
+        $$(".copy-btn").forEach(button => {
+
+            button.addEventListener("click", async event => {
+
+                event.stopPropagation();
+
+                const code =
+                    button.parentElement.querySelector(".code")
+                        .textContent;
+
+                try {
+
+                    await navigator.clipboard.writeText(code);
+
+                    button.textContent = "تم النسخ ✓";
+
+                    setTimeout(() => {
+                        button.textContent = "نسخ";
+                    }, 1400);
+
+                    showToast("تم نسخ الكود ✓", "success");
+
+                } catch (error) {
+
+                    const temp = document.createElement("textarea");
+
+                    temp.value = code;
+
+                    document.body.appendChild(temp);
+                    temp.select();
+
+                    document.execCommand("copy");
+
+                    temp.remove();
+
+                    showToast("تم نسخ الكود ✓", "success");
+                }
+            });
+
+        });
+
+        /* =========================================================
+           TERMINAL SIMULATOR
+        ========================================================= */
+
+        const terminalScreen = $("#terminalScreen");
+
+        function escapeHtml(value) {
+            return String(value)
+                .replaceAll("&", "&amp;")
+                .replaceAll("<", "&lt;")
+                .replaceAll(">", "&gt;");
+        }
+
+        function terminalPrint(command, output) {
+
+            const block = document.createElement("div");
+
+            block.innerHTML =
+                `<span class="prompt">$</span> ` +
+                `<span>${escapeHtml(command)}</span>` +
+                `<br>` +
+                `<span>${escapeHtml(output)}</span>`;
+
+            terminalScreen.appendChild(block);
+
+            terminalScreen.scrollTop =
+                terminalScreen.scrollHeight;
+        }
+
+        function simulateCommand(command) {
+
+            const trimmed = command.trim();
+
+            if (!trimmed) return;
+
+            let output = "";
+
+            if (/^echo\s+/i.test(trimmed)) {
+
+                let text = trimmed
+                    .replace(/^echo\s+/i, "")
+                    .trim();
+
+                text = text
+                    .replace(/^["']|["']$/g, "");
+
+                output = text;
+
+            } else if (trimmed === "pwd") {
+
+                output = "/home/bash-user";
+
+            } else if (trimmed === "whoami") {
+
+                output = "bash-user";
+
+            } else if (trimmed === "date") {
+
+                output = new Date().toString();
+
+            } else if (trimmed === "clear") {
+
+                terminalScreen.innerHTML = "";
+                return;
+
+            } else if (/^printf\s+/i.test(trimmed)) {
+
+                const match = trimmed.match(
+                    /^printf\s+["']([\s\S]*?)["']/
+                );
+
+                output = match
+                    ? match[1].replaceAll("\\n", "\n")
+                    : "printf output";
+
+            } else if (/^ls\b/i.test(trimmed)) {
+
+                output =
+                    `bash-script.sh
+notes.txt
+projects
+Documents
+Downloads`;
+
+            } else if (/^grep\s+/i.test(trimmed)) {
+
+                output =
+                    `Ahmed
+Ahmed`;
+
+            } else if (/^sort\b/i.test(trimmed)) {
+
+                output =
+                    `Ahmed
+Ali
+Sara`;
+
+            } else if (/^wc\s+-l/i.test(trimmed)) {
+
+                output = "3";
+
+            } else if (/^chmod\b/i.test(trimmed)) {
+
+                output = "";
+
+            } else if (/^bash\s+-x/i.test(trimmed)) {
+
+                output =
+                    `+ name=Ahmed
++ echo 'Hello Ahmed'
+Hello Ahmed`;
+
+            } else if (trimmed === "help") {
+
+                output =
+                    `Available simulator commands:
+echo <text>
+pwd
+whoami
+date
+ls
+grep
+sort
+wc -l
+clear
+help`;
+
+            } else {
+
+                output =
+                    `[Simulator] لا يوجد تنفيذ حقيقي لهذا الأمر هنا.
+جرّبه في WSL للحصول على النتيجة الفعلية.`;
+            }
+
+            terminalPrint(trimmed, output);
+        }
+
+        $$(".code").forEach(code => {
+
+            code.addEventListener("click", event => {
+
+                if (event.target.closest(".copy-btn")) {
+                    return;
+                }
+
+                const output =
+                    code.dataset.output ||
+                    code.textContent;
+
+                terminalScreen.innerHTML = "";
+
+                terminalPrint(
+                    "run-example",
+                    output
+                );
+
+                terminalScreen.insertAdjacentHTML(
+                    "beforeend",
+                    `<br><span class="muted"># هذه نتيجة محاكاة تعليمية وليست Bash حقيقيًا.</span>`
+                );
+
+            });
+
+        });
+
+        $("#terminalInput").addEventListener(
+            "keydown",
+            event => {
+
+                if (event.key !== "Enter") {
+                    return;
+                }
+
+                const input = event.target.value;
+
+                event.target.value = "";
+
+                simulateCommand(input);
+            }
+        );
+
+        /* =========================================================
+           SEARCH
+        ========================================================= */
+
+        let currentFilter = "all";
+
+        function applyFilters() {
+
+            const query =
+                $("#searchInput").value
+                    .trim()
+                    .toLowerCase();
+
+            let visibleCount = 0;
+
+            lessons.forEach(lesson => {
+
+                const text = (
+                    lesson.dataset.search +
+                    " " +
+                    lesson.querySelector(".lesson-title").textContent +
+                    " " +
+                    lesson.querySelector(".lesson-meta").textContent
+                ).toLowerCase();
+
+                const matchesSearch =
+                    !query || text.includes(query);
+
+                const completed =
+                    !!state.completed[lesson.dataset.id];
+
+                let matchesFilter = true;
+
+                if (currentFilter === "completed") {
+                    matchesFilter = completed;
+                }
+
+                if (currentFilter === "pending") {
+                    matchesFilter = !completed;
+                }
+
+                const visible =
+                    matchesSearch && matchesFilter;
+
+                lesson.classList.toggle(
+                    "search-hidden",
+                    !visible
+                );
+
+                if (visible) {
+                    visibleCount++;
+                }
+            });
+
+            $("#noResults")?.classList.toggle(
+                "show",
+                visibleCount === 0
+            );
+        }
+
+        $("#searchInput").addEventListener(
+            "input",
+            applyFilters
+        );
+
+        $$(".filter-btn").forEach(button => {
+
+            button.addEventListener("click", () => {
+
+                $$(".filter-btn").forEach(btn =>
+                    btn.classList.remove("active")
+                );
+
+                button.classList.add("active");
+
+                currentFilter = button.dataset.filter;
+
+                applyFilters();
+            });
+
+        });
+
+        /* =========================================================
+           RESET PROGRESS
+        ========================================================= */
+
+        $("#resetProgress").addEventListener("click", () => {
+
+            const confirmed = confirm(
+                "هل أنت متأكد من إعادة ضبط جميع الدروس؟\n\nسيتم حذف حالة الإنجاز فقط، ولن يتم حذف الملاحظات."
+            );
+
+            if (!confirmed) return;
+
+            state.completed = {};
+
+            lessons.forEach(lesson => {
+
+                lesson.classList.remove("completed");
+
+                const checkbox =
+                    lesson.querySelector('input[type="checkbox"]');
+
+                checkbox.checked = false;
+            });
+
+            saveState();
+            updateProgress();
+            applyFilters();
+
+            showToast("تم إعادة ضبط التقدم");
+        });
+
+        /* =========================================================
+           POMODORO
+        ========================================================= */
+
+        const STUDY_TIME = 25 * 60;
+        const BREAK_TIME = 5 * 60;
+
+        let timerSeconds = STUDY_TIME;
+        let timerMode = "study";
+        let timerInterval = null;
+        let timerRunning = false;
+
+        function formatTime(seconds) {
+
+            const minutes =
+                Math.floor(seconds / 60)
+                    .toString()
+                    .padStart(2, "0");
+
+            const secs =
+                (seconds % 60)
+                    .toString()
+                    .padStart(2, "0");
+
+            return `${minutes}:${secs}`;
+        }
+
+        function renderTimer() {
+
+            const display = $("#timerDisplay");
+            const mode = $("#timerMode");
+
+            display.textContent =
+                formatTime(timerSeconds);
+
+            mode.textContent =
+                timerMode === "study"
+                    ? "وقت المذاكرة — 25 دقيقة"
+                    : "وقت الراحة — 5 دقائق";
+
+            display.classList.toggle(
+                "running",
+                timerRunning
+            );
+        }
+
+        function stopTimerInterval() {
+
+            if (timerInterval) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+            }
+
+            timerRunning = false;
+
+            renderTimer();
+        }
+
+        function startTimer() {
+
+            if (timerRunning) return;
+
+            timerRunning = true;
+
+            renderTimer();
+
+            timerInterval = setInterval(() => {
+
+                timerSeconds--;
+
+                if (timerSeconds <= 0) {
+
+                    timerSeconds =
+                        timerMode === "study"
+                            ? BREAK_TIME
+                            : STUDY_TIME;
+
+                    timerMode =
+                        timerMode === "study"
+                            ? "break"
+                            : "study";
+
+                    showToast(
+                        timerMode === "break"
+                            ? "انتهت المذاكرة — وقت الراحة ☕"
+                            : "انتهت الراحة — نرجع للمذاكرة 🚀",
+                        "success"
+                    );
+                }
+
+                renderTimer();
+
+            }, 1000);
+        }
+
+        function pauseTimer() {
+            stopTimerInterval();
+        }
+
+        function resetTimer() {
+
+            stopTimerInterval();
+
+            timerMode = "study";
+            timerSeconds = STUDY_TIME;
+
+            renderTimer();
+        }
+
+        $("#timerStart").addEventListener(
+            "click",
+            startTimer
+        );
+
+        $("#timerPause").addEventListener(
+            "click",
+            pauseTimer
+        );
+
+        $("#timerReset").addEventListener(
+            "click",
+            resetTimer
+        );
+
+        /* =========================================================
+           KEYBOARD SHORTCUT
+        ========================================================= */
+
+        document.addEventListener("keydown", event => {
+
+            if (
+                event.target.tagName === "INPUT" ||
+                event.target.tagName === "TEXTAREA"
+            ) {
+                return;
+            }
+
+            if (event.key === "/") {
+
+                event.preventDefault();
+
+                $("#searchInput").focus();
+            }
+
+            if (event.key.toLowerCase() === "p") {
+
+                if (timerRunning) {
+                    pauseTimer();
+                } else {
+                    startTimer();
+                }
+            }
+        });
+
+        /* =========================================================
+           ACTIVE NAV ON SCROLL
+        ========================================================= */
+
+        const sections = [
+            "home",
+            "day1",
+            "day2",
+            "day3",
+            "cheat"
+        ];
+
+        const sectionObserver =
+            new IntersectionObserver(
+                entries => {
+
+                    entries.forEach(entry => {
+
+                        if (!entry.isIntersecting) {
+                            return;
+                        }
+
+                        const id = entry.target.id;
+
+                        $$(".nav-item").forEach(item => {
+
+                            item.classList.toggle(
+                                "active",
+                                item.dataset.target === id
+                            );
+
+                        });
+
+                    });
+
+                },
+                {
+                    rootMargin: "-30% 0px -55% 0px"
+                }
+            );
+
+        sections.forEach(id => {
+
+            const element =
+                document.getElementById(id);
+
+            if (element) {
+                sectionObserver.observe(element);
+            }
+
+        });
+
+        /* =========================================================
+           INITIALIZE
+        ========================================================= */
+
+        initializeLessons();
+        initializeNotes();
+        updateProgress();
+        renderTimer();
+
+        /* Add no-results dynamically */
+        const noResults = document.createElement("div");
+
+        noResults.id = "noResults";
+        noResults.className = "no-results";
+
+        noResults.innerHTML =
+            "🔎 لا توجد دروس تطابق البحث أو الفلتر الحالي.";
+
+        document
+            .querySelector(".toolbar")
+            .after(noResults);
+
+        /* Make search aware of dynamic no-results */
+        applyFilters();
+
+        /* =========================================================
+           PREVENT ACCIDENTAL CODE TEXT SELECTION BEHAVIOR
+        ========================================================= */
+
+        $$(".code").forEach(code => {
+
+            code.setAttribute(
+                "title",
+                "اضغط هنا لإظهار النتيجة في المحاكي"
+            );
+
+        });
+
+        /* =========================================================
+           FINAL READY MESSAGE
+        ========================================================= */
+
+        console.log(
+            `Bash Academy loaded successfully.
+Lessons: ${lessons.length}
+Progress: ${$("#globalPercent").textContent}`
+        );
+
+    </script>
+
+
+
+</body></html>
