@@ -1,0 +1,6 @@
+2026-08-20 10:15:01 INFO - User Ahmed logged in successfully.
+2026-08-20 10:16:45 WARNING - High memory usage detected.
+2026-08-20 10:18:22 ERROR - Database connection failed!
+2026-08-20 10:19:10 INFO - Backup script started.
+2026-08-20 10:22:14 ERROR - Permission denied for reporter.sh
+2026-08-20 10:25:30 WARNING - Disk space is reaching 90%.
